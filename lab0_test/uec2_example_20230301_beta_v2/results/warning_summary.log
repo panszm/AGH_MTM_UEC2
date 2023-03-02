@@ -1,0 +1,9 @@
+Warnings, critical warnings and errors from synthesis and implementation
+
+Created: Thu 02 Mar 2023 06:42:41 PM CET
+
+----SYNTHESIS----
+CLEAR :)
+
+----IMPLEMENTATION----
+WARNING: [Place 46-29] place_design is not in timing mode. Skip physical synthesis in placer
