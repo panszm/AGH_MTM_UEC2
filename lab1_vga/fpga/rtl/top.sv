@@ -11,6 +11,7 @@
 
 module top (
   input  logic clk,
+  input  logic rst,
   output logic vs,
   output logic hs,
   output logic [3:0] r,
@@ -92,7 +93,8 @@ module top (
     .hcount(hcount),
     .hsync(hsync),
     .hblnk(hblnk),
-    .pclk(pclk)
+    .pclk(pclk),
+    .rst(rst)
   );
 
   // This is a simple test pattern generator.

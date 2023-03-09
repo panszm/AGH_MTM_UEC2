@@ -46,3 +46,7 @@ set_property IOSTANDARD LVCMOS33 [get_ports {pclk_mirror}]
 # Constraints for CFGBVS
 set_property CFGBVS VCCO [current_design]
 set_property CONFIG_VOLTAGE 3.3 [current_design]
+
+#Constraints for Buttons
+set_property PACKAGE_PIN U18 [get_ports {rst}]						
+set_property IOSTANDARD LVCMOS33 [get_ports {rst}]

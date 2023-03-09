@@ -17,7 +17,8 @@ module vga_timing (
   output logic [10:0] hcount,
   output logic hsync,
   output logic hblnk,
-  input  logic pclk
+  input  logic pclk,
+  input  logic rst
   );
 
   parameter   
@@ -43,7 +44,7 @@ module vga_timing (
   // Describe the actual circuit for the assignment.
   // Video timing controller set for 800x600@60fps
   // using a 40 MHz pixel clock per VESA spec.
-  always @(*) begin
+  always_comb begin
     hcount_nxt = (hcount + 1) % FULL_WIDTH;
     if(hcount == FULL_WIDTH - 1) begin
       vcount_nxt = (vcount + 1) % FULL_HEIGHT;
@@ -52,7 +53,7 @@ module vga_timing (
     end
   end
 
-  always @(*) begin
+  always_comb begin
 		if(hcount_nxt >= VISIBLE_WIDTH && hcount_nxt < FULL_WIDTH) begin
 			hblnk_nxt = 1;
 		end else begin
@@ -78,15 +79,26 @@ module vga_timing (
 		end
   end
  
-  always @ (posedge pclk) begin
-    vcount <= vcount_nxt;
-    hcount <= hcount_nxt;
+  always_ff @ (posedge pclk) begin
+    if(rst) begin
+      vcount <= 0;
+      hcount <= 0;
 
-    vsync <= vsync_nxt;
-    hsync <= hsync_nxt;
+      vsync <= 0;
+      hsync <= 0;
 
-    vblnk <= vblnk_nxt;
-    hblnk <= hblnk_nxt;
+      vblnk <= 0;
+      hblnk <= 0;
+    end else begin
+      vcount <= vcount_nxt;
+      hcount <= hcount_nxt;
+
+      vsync <= vsync_nxt;
+      hsync <= hsync_nxt;
+
+      vblnk <= vblnk_nxt;
+      hblnk <= hblnk_nxt;
+    end
   end
 
 endmodule

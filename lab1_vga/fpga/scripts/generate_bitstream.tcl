@@ -18,7 +18,7 @@
 #Project name                                 -- EDIT  TODO: dac to do design_files albo do .sh
 set project_name example_project
 # Top module name                             -- EDIT  TODO: dac to do design_files albo do .sh
-set top_module top_example_basys3
+set top_module top
 # FPGA device
 set target xc7a35tcpg236-1
 # Design files
