@@ -25,7 +25,7 @@ proc program_fpga {bitstream_file} {
         puts "ERROR: Bitstream not found"
         exit 1
     } else {
-        open_hw_manager
+        open_hw
         connect_hw_server
         current_hw_target [get_hw_targets *]
         open_hw_target
