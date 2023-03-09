@@ -12,3 +12,5 @@ xvlog.pb
 xsim.dir
 dvt_build.log
 .dvt/
+vivado*.jou
+vivado*.log
