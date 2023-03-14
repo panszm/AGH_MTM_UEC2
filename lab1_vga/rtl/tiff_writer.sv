@@ -373,9 +373,9 @@ module tiff_writer (
   endtask
 
   logic go_delayed = 0;
-  always_ff @(go) go_delayed <= #1 go;
+  always @(go) go_delayed <= #1 go;
 
-  always_ff @(negedge pclk_mirror)
+  always @(negedge pclk_mirror)
   begin
     if (file_open == 1)
     begin
@@ -385,7 +385,7 @@ module tiff_writer (
     end
   end
 
-  always_ff @(posedge go_delayed)
+  always @(posedge go_delayed)
   begin
     OPEN_FILE(frame_number);
     WRITE_HEADER(xdim, ydim);

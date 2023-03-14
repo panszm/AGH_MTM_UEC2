@@ -20,6 +20,7 @@
 add_files -fileset sim_1 {
     vga_timing_test/vga_timing_test_tb.sv
     ../rtl/vga_timing.sv
+    ../rtl/tiff_writer.sv
 }
 
 

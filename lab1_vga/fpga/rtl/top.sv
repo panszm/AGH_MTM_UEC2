@@ -114,7 +114,7 @@ module top (
       else if (hcount == 0) {r,g,b} <= 12'h0_f_0;
       else if (hcount == 799) {r,g,b} <= 12'h0_0_f;
       else begin 
-      //signature 21 pixs for Ś4
+      //signature 21 pixs for WŚ
         if(vcount == 300 && hcount == 401) {r,g,b} <= 12'hf_f_f;
         else if(vcount == 301 && hcount == 400) {r,g,b} <= 12'hf_f_f;
         else if(vcount == 301 && hcount == 401) {r,g,b} <= 12'hf_f_f;

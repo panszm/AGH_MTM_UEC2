@@ -23,6 +23,9 @@ module vga_timing_test_tb;
   logic [10:0] vcount, hcount;
   logic vsync, hsync;
   logic vblnk, hblnk;
+  logic [3:0] r;
+  logic [3:0] g;
+  logic [3:0] b;
 
   // Instantiate the vga_example module.
   
@@ -40,15 +43,15 @@ module vga_timing_test_tb;
 
   // Instantiate the tiff_writer module.
 
-  // tiff_writer my_writer (
-  //   .pclk_mirror(pclk_mirror),
-  //   .r({r,r}), // fabricate an 8-bit value
-  //   .g({g,g}), // fabricate an 8-bit value
-  //   .b({b,b}), // fabricate an 8-bit value
-  //   .go(vs),
-  //   .xdim(16'd1056),
-  //   .ydim(16'd628)
-  // );
+  tiff_writer my_writer (
+    .pclk_mirror(clk),
+    .r({r,r}), // fabricate an 8-bit value
+    .g({g,g}), // fabricate an 8-bit value
+    .b({b,b}), // fabricate an 8-bit value
+    .go(vsync),
+    .xdim(16'd1056),
+    .ydim(16'd628)
+  );
 
   // Describe a process that generates a clock
   // signal. The clock is 40 MHz.
@@ -94,6 +97,58 @@ module vga_timing_test_tb;
         HORIZONTAL_FRONT_PORCH = 40,
         HORIZONTAL_SYNC_PULSE = 128,
         FULL_WIDTH = 1056;
+
+  always_ff @(posedge clk)
+  begin
+    // During blanking, make it it black.
+    if (vblnk || hblnk) {r,g,b} <= 12'h0_0_0; 
+    else
+    begin
+      // Frame, to test for correct sync
+      if (vcount == 0) {r,g,b} <= 12'hf_f_0;
+      else if (vcount == 599) {r,g,b} <= 12'hf_0_0;
+      else if (hcount == 0) {r,g,b} <= 12'h0_f_0;
+      else if (hcount == 799) {r,g,b} <= 12'h0_0_f;
+      else begin 
+      //signature 21 pixs for WŚ
+        if(vcount == 300 && hcount == 401) {r,g,b} <= 12'hf_f_f;
+        else if(vcount == 301 && hcount == 400) {r,g,b} <= 12'hf_f_f;
+        else if(vcount == 301 && hcount == 401) {r,g,b} <= 12'hf_f_f;
+        else if(vcount == 301 && hcount == 402) {r,g,b} <= 12'hf_f_f;
+        else if(vcount == 302 && hcount == 400) {r,g,b} <= 12'hf_f_f;
+        else if(vcount == 303 && hcount == 400) {r,g,b} <= 12'hf_f_f;
+        else if(vcount == 303 && hcount == 401) {r,g,b} <= 12'hf_f_f;
+        else if(vcount == 303 && hcount == 402) {r,g,b} <= 12'hf_f_f;
+        else if(vcount == 304 && hcount == 402) {r,g,b} <= 12'hf_f_f;
+        else if(vcount == 305 && hcount == 400) {r,g,b} <= 12'hf_f_f;
+        else if(vcount == 305 && hcount == 401) {r,g,b} <= 12'hf_f_f;
+        else if(vcount == 305 && hcount == 402) {r,g,b} <= 12'hf_f_f;
+
+        else if(vcount == 301 && hcount == 394) {r,g,b} <= 12'hf_f_f;
+        else if(vcount == 302 && hcount == 394) {r,g,b} <= 12'hf_f_f;
+        else if(vcount == 300 && hcount == 394) {r,g,b} <= 12'hf_f_f;
+        else if(vcount == 303 && hcount == 394) {r,g,b} <= 12'hf_f_f;
+        else if(vcount == 304 && hcount == 394) {r,g,b} <= 12'hf_f_f;
+        else if(vcount == 305 && hcount == 394) {r,g,b} <= 12'hf_f_f;
+
+        else if(vcount == 304 && hcount == 395) {r,g,b} <= 12'hf_f_f;
+        
+        else if(vcount == 302 && hcount == 396) {r,g,b} <= 12'hf_f_f;
+        else if(vcount == 303 && hcount == 396) {r,g,b} <= 12'hf_f_f;
+
+        else if(vcount == 304 && hcount == 397) {r,g,b} <= 12'hf_f_f;
+
+        else if(vcount == 301 && hcount == 398) {r,g,b} <= 12'hf_f_f;
+        else if(vcount == 302 && hcount == 398) {r,g,b} <= 12'hf_f_f;
+        else if(vcount == 300 && hcount == 398) {r,g,b} <= 12'hf_f_f;
+        else if(vcount == 303 && hcount == 398) {r,g,b} <= 12'hf_f_f;
+        else if(vcount == 304 && hcount == 398) {r,g,b} <= 12'hf_f_f;
+        else if(vcount == 305 && hcount == 398) {r,g,b} <= 12'hf_f_f;
+        
+        else {r,g,b} <= 12'h8_8_8;
+      end
+    end
+  end
 
   always_ff @(posedge clk) begin
     if(!rst) begin

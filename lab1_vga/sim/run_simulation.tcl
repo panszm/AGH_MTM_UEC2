@@ -31,7 +31,7 @@ proc simulation {} {
     
     launch_simulation
     # If simulation needs more time than defult, enable run all
-    #run all
+    run all
     # relaunch ... TODO
     # add_wave ... TODO
 }
