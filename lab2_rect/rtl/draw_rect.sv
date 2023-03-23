@@ -57,7 +57,7 @@ always_ff @(posedge clk) begin
 end
 
 always_comb begin
-    if (!bus_in.vblnk && !bus_in.hblnk && bus_in.hcount >= RECT_X_POSITION && bus_in.hcount <= (RECT_X_POSITION + RECT_WIDTH) && bus_in.vcount >= RECT_Y_POSITION && bus_in.vcount <= (RECT_Y_POSITION + RECT_HEIGHT)) begin              // - make it it black.                              // Active region:
+    if (!bus_in.vblnk && !bus_in.hblnk && bus_in.hcount >= RECT_X_POSITION && bus_in.hcount < (RECT_X_POSITION + RECT_WIDTH) && bus_in.vcount >= RECT_Y_POSITION && bus_in.vcount < (RECT_Y_POSITION + RECT_HEIGHT)) begin   
         rgb_nxt = RECT_COLOR;
     end else begin
         rgb_nxt = bus_in.rgb;
