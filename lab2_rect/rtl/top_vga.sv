@@ -102,6 +102,8 @@ draw_rect u_draw_rect (
     .hsync_in   (hsync_bg),
     .hblnk_in   (hblnk_bg),
 
+    .rgb_in     (rgb_bg),
+
     .vcount_out (vcount_rect),
     .vsync_out  (vsync_rect),
     .vblnk_out  (vblnk_rect),
