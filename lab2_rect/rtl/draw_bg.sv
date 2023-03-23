@@ -21,14 +21,7 @@ module draw_bg (
     input  logic        hsync_in,
     input  logic        hblnk_in,
 
-    output logic [10:0] vcount_out,
-    output logic        vsync_out,
-    output logic        vblnk_out,
-    output logic [10:0] hcount_out,
-    output logic        hsync_out,
-    output logic        hblnk_out,
-
-    output logic [11:0] rgb_out
+    vga_bus bus_out
 );
 
 import vga_pkg::*;
@@ -47,21 +40,21 @@ logic [11:0] rgb_nxt;
 
 always_ff @(posedge clk) begin : bg_ff_blk
     if (rst) begin
-        vcount_out <= '0;
-        vsync_out  <= '0;
-        vblnk_out  <= '0;
-        hcount_out <= '0;
-        hsync_out  <= '0;
-        hblnk_out  <= '0;
-        rgb_out    <= '0;
+        bus_out.vcount <= '0;
+        bus_out.vsync  <= '0;
+        bus_out.vblnk  <= '0;
+        bus_out.hcount <= '0;
+        bus_out.hsync  <= '0;
+        bus_out.hblnk  <= '0;
+        bus_out.rgb    <= '0;
     end else begin
-        vcount_out <= vcount_in;
-        vsync_out  <= vsync_in;
-        vblnk_out  <= vblnk_in;
-        hcount_out <= hcount_in;
-        hsync_out  <= hsync_in;
-        hblnk_out  <= hblnk_in;
-        rgb_out    <= rgb_nxt;
+        bus_out.vcount <= vcount_in;
+        bus_out.vsync  <= vsync_in;
+        bus_out.vblnk  <= vblnk_in;
+        bus_out.hcount <= hcount_in;
+        bus_out.hsync  <= hsync_in;
+        bus_out.hblnk  <= hblnk_in;
+        bus_out.rgb    <= rgb_nxt;
     end
 end
 

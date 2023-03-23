@@ -13,24 +13,8 @@
 module draw_rect (
     input  logic clk,
     input  logic rst,
-
-    input  logic [10:0] vcount_in,
-    input  logic        vsync_in,
-    input  logic        vblnk_in,
-    input  logic [10:0] hcount_in,
-    input  logic        hsync_in,
-    input  logic        hblnk_in,
-
-    input  logic [11:0] rgb_in,
-
-    output logic [10:0] vcount_out,
-    output logic        vsync_out,
-    output logic        vblnk_out,
-    output logic [10:0] hcount_out,
-    output logic        hsync_out,
-    output logic        hblnk_out,
-
-    output logic [11:0] rgb_out
+    vga_bus bus_in,
+    vga_bus bus_out,
 );
 
 import vga_pkg::*;
@@ -54,29 +38,29 @@ localparam RECT_X_POSITION = 50,
 
 always_ff @(posedge clk) begin
     if (rst) begin
-        vcount_out <= '0;
-        vsync_out  <= '0;
-        vblnk_out  <= '0;
-        hcount_out <= '0;
-        hsync_out  <= '0;
-        hblnk_out  <= '0;
-        rgb_out    <= '0;
+        bus_out.busvcount <= '0;
+        bus_out.vsync  <= '0;
+        bus_out.vblnk  <= '0;
+        bus_out.hcount <= '0;
+        bus_out.hsync  <= '0;
+        bus_out.hblnk  <= '0;
+        bus_out.rgb    <= '0;
     end else begin
-        vcount_out <= vcount_in;
-        vsync_out  <= vsync_in;
-        vblnk_out  <= vblnk_in;
-        hcount_out <= hcount_in;
-        hsync_out  <= hsync_in;
-        hblnk_out  <= hblnk_in;
-        rgb_out    <= rgb_nxt;
+        bus_out.vcount <= bus_in.vcount;
+        bus_out.vsync  <= bus_in.vsync;
+        bus_out.vblnk  <= bus_in.vblnk;
+        bus_out.hcount <= bus_in.hcount;
+        bus_out.hsync  <= bus_in.hsync;
+        bus_out.hblnk  <= bus_in.hblnk;
+        bus_out.rgb    <= rgb_nxt;
     end
 end
 
 always_comb begin
-    if (!vblnk_in && !hblnk_in && hcount_in >= RECT_X_POSITION && hcount_in <= (RECT_X_POSITION + RECT_WIDTH) && vcount_in >= RECT_Y_POSITION && vcount_in <= (RECT_Y_POSITION + RECT_HEIGHT)) begin              // - make it it black.                              // Active region:
+    if (!bus_in.vblnk && !bus_in.hblnk && bus_in.hcount >= RECT_X_POSITION && bus_in.hcount <= (RECT_X_POSITION + RECT_WIDTH) && bus_in.vcount >= RECT_Y_POSITION && bus_in.vcount <= (RECT_Y_POSITION + RECT_HEIGHT)) begin              // - make it it black.                              // Active region:
         rgb_nxt = RECT_COLOR;
     end else begin
-        rgb_nxt = rgb_in;
+        rgb_nxt = bus_in.rgb;
     end
 
 end
