@@ -40,14 +40,19 @@ wire vsync_bg, hsync_bg;
 wire vblnk_bg, hblnk_bg;
 wire [11:0] rgb_bg;
 
+// VGA signals from rect
+wire [10:0] vcount_rect, hcount_rect;
+wire vsync_rect, hsync_rect;
+wire vblnk_rect, hblnk_rect;
+wire [11:0] rgb_rect;
 
 /**
  * Signals assignments
  */
 
-assign vs = vsync_bg;
-assign hs = hsync_bg;
-assign {r,g,b} = rgb_bg;
+assign vs = vsync_rect;
+assign hs = hsync_rect;
+assign {r,g,b} = rgb_rect;
 
 
 /**
@@ -85,5 +90,28 @@ draw_bg u_draw_bg (
 
     .rgb_out    (rgb_bg)
 );
+
+draw_rect u_draw_rect (
+    .clk,
+    .rst,
+
+    .vcount_in  (vcount_bg),
+    .vsync_in   (vsync_bg),
+    .vblnk_in   (vblnk_bg),
+    .hcount_in  (hcount_bg),
+    .hsync_in   (hsync_bg),
+    .hblnk_in   (hblnk_bg),
+
+    .vcount_out (vcount_rect),
+    .vsync_out  (vsync_rect),
+    .vblnk_out  (vblnk_rect),
+    .hcount_out (hcount_rect),
+    .hsync_out  (hsync_rect),
+    .hblnk_out  (hblnk_rect),
+
+    .rgb_out    (rgb_rect)
+);
+
+
 
 endmodule
