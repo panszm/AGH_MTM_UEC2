@@ -72,39 +72,39 @@ always_comb begin : bg_comb_blk
             rgb_nxt = 12'h0_0_f;                // - - make a blue line.
 
       //signature 21 pixs for WŚ
-        else if(vcount_in == 300 && hcount_in == 401) rgb_nxt <= 12'hf_f_f;
-        else if(vcount_in == 301 && hcount_in == 400) rgb_nxt <= 12'hf_f_f;
-        else if(vcount_in == 301 && hcount_in == 401) rgb_nxt <= 12'hf_f_f;
-        else if(vcount_in == 301 && hcount_in == 402) rgb_nxt <= 12'hf_f_f;
-        else if(vcount_in == 302 && hcount_in == 400) rgb_nxt <= 12'hf_f_f;
-        else if(vcount_in == 303 && hcount_in == 400) rgb_nxt <= 12'hf_f_f;
-        else if(vcount_in == 303 && hcount_in == 401) rgb_nxt <= 12'hf_f_f;
-        else if(vcount_in == 303 && hcount_in == 402) rgb_nxt <= 12'hf_f_f;
-        else if(vcount_in == 304 && hcount_in == 402) rgb_nxt <= 12'hf_f_f;
-        else if(vcount_in == 305 && hcount_in == 400) rgb_nxt <= 12'hf_f_f;
-        else if(vcount_in == 305 && hcount_in == 401) rgb_nxt <= 12'hf_f_f;
-        else if(vcount_in == 305 && hcount_in == 402) rgb_nxt <= 12'hf_f_f;
+        else if(vcount_in == 300 && hcount_in == 401) rgb_nxt = 12'hf_f_f;
+        else if(vcount_in == 301 && hcount_in == 400) rgb_nxt = 12'hf_f_f;
+        else if(vcount_in == 301 && hcount_in == 401) rgb_nxt = 12'hf_f_f;
+        else if(vcount_in == 301 && hcount_in == 402) rgb_nxt = 12'hf_f_f;
+        else if(vcount_in == 302 && hcount_in == 400) rgb_nxt = 12'hf_f_f;
+        else if(vcount_in == 303 && hcount_in == 400) rgb_nxt = 12'hf_f_f;
+        else if(vcount_in == 303 && hcount_in == 401) rgb_nxt = 12'hf_f_f;
+        else if(vcount_in == 303 && hcount_in == 402) rgb_nxt = 12'hf_f_f;
+        else if(vcount_in == 304 && hcount_in == 402) rgb_nxt = 12'hf_f_f;
+        else if(vcount_in == 305 && hcount_in == 400) rgb_nxt = 12'hf_f_f;
+        else if(vcount_in == 305 && hcount_in == 401) rgb_nxt = 12'hf_f_f;
+        else if(vcount_in == 305 && hcount_in == 402) rgb_nxt = 12'hf_f_f;
 
-        else if(vcount_in == 301 && hcount_in == 394) rgb_nxt <= 12'hf_f_f;
-        else if(vcount_in == 302 && hcount_in == 394) rgb_nxt <= 12'hf_f_f;
-        else if(vcount_in == 300 && hcount_in == 394) rgb_nxt <= 12'hf_f_f;
-        else if(vcount_in == 303 && hcount_in == 394) rgb_nxt <= 12'hf_f_f;
-        else if(vcount_in == 304 && hcount_in == 394) rgb_nxt <= 12'hf_f_f;
-        else if(vcount_in == 305 && hcount_in == 394) rgb_nxt <= 12'hf_f_f;
+        else if(vcount_in == 301 && hcount_in == 394) rgb_nxt = 12'hf_f_f;
+        else if(vcount_in == 302 && hcount_in == 394) rgb_nxt = 12'hf_f_f;
+        else if(vcount_in == 300 && hcount_in == 394) rgb_nxt = 12'hf_f_f;
+        else if(vcount_in == 303 && hcount_in == 394) rgb_nxt = 12'hf_f_f;
+        else if(vcount_in == 304 && hcount_in == 394) rgb_nxt = 12'hf_f_f;
+        else if(vcount_in == 305 && hcount_in == 394) rgb_nxt = 12'hf_f_f;
 
-        else if(vcount_in == 304 && hcount_in == 395) rgb_nxt <= 12'hf_f_f;
+        else if(vcount_in == 304 && hcount_in == 395) rgb_nxt = 12'hf_f_f;
         
-        else if(vcount_in == 302 && hcount_in == 396) rgb_nxt <= 12'hf_f_f;
-        else if(vcount_in == 303 && hcount_in == 396) rgb_nxt <= 12'hf_f_f;
+        else if(vcount_in == 302 && hcount_in == 396) rgb_nxt = 12'hf_f_f;
+        else if(vcount_in == 303 && hcount_in == 396) rgb_nxt = 12'hf_f_f;
 
-        else if(vcount_in == 304 && hcount_in == 397) rgb_nxt <= 12'hf_f_f;
+        else if(vcount_in == 304 && hcount_in == 397) rgb_nxt = 12'hf_f_f;
 
-        else if(vcount_in == 301 && hcount_in == 398) rgb_nxt <= 12'hf_f_f;
-        else if(vcount_in == 302 && hcount_in == 398) rgb_nxt <= 12'hf_f_f;
-        else if(vcount_in == 300 && hcount_in == 398) rgb_nxt <= 12'hf_f_f;
-        else if(vcount_in == 303 && hcount_in == 398) rgb_nxt <= 12'hf_f_f;
-        else if(vcount_in == 304 && hcount_in == 398) rgb_nxt <= 12'hf_f_f;
-        else if(vcount_in == 305 && hcount_in == 398) rgb_nxt <= 12'hf_f_f;
+        else if(vcount_in == 301 && hcount_in == 398) rgb_nxt = 12'hf_f_f;
+        else if(vcount_in == 302 && hcount_in == 398) rgb_nxt = 12'hf_f_f;
+        else if(vcount_in == 300 && hcount_in == 398) rgb_nxt = 12'hf_f_f;
+        else if(vcount_in == 303 && hcount_in == 398) rgb_nxt = 12'hf_f_f;
+        else if(vcount_in == 304 && hcount_in == 398) rgb_nxt = 12'hf_f_f;
+        else if(vcount_in == 305 && hcount_in == 398) rgb_nxt = 12'hf_f_f;
 
         else                                    // The rest of active display pixels:
             rgb_nxt = 12'h8_8_8;                // - fill with gray.

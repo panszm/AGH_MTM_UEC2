@@ -14,7 +14,7 @@ module draw_rect (
     input  logic clk,
     input  logic rst,
     vga_bus bus_in,
-    vga_bus bus_out,
+    vga_bus bus_out
 );
 
 import vga_pkg::*;
@@ -38,7 +38,7 @@ localparam RECT_X_POSITION = 50,
 
 always_ff @(posedge clk) begin
     if (rst) begin
-        bus_out.busvcount <= '0;
+        bus_out.vcount <= '0;
         bus_out.vsync  <= '0;
         bus_out.vblnk  <= '0;
         bus_out.hcount <= '0;

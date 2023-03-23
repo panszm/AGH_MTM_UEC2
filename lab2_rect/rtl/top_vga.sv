@@ -82,7 +82,7 @@ draw_rect u_draw_rect (
     .clk,
     .rst,
 
-    .bus_in     (bus_bg.IN)
+    .bus_in     (bus_bg.IN),
     .bus_out    (bus_rect.OUT)
 );
 
