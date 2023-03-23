@@ -16,7 +16,6 @@
 */vivado.log
 vivado.jou
 vivado.log
-*.bit
 *.tif
 *.log
 */*.tif
