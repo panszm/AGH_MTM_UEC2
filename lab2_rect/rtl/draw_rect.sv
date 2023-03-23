@@ -45,14 +45,14 @@ localparam RECT_X_POSITION = 50,
            RECT_Y_POSITION = 50,
            RECT_WIDTH = 50,
            RECT_HEIGHT = 100,
-           RECT_COLOR = 12'hb_9_b
+           RECT_COLOR = 12'hb_9_b;
 
 
 /**
  * Internal logic
  */
 
-always_ff @(posedge clk) begin : bg_ff_blk
+always_ff @(posedge clk) begin
     if (rst) begin
         vcount_out <= '0;
         vsync_out  <= '0;
@@ -72,7 +72,7 @@ always_ff @(posedge clk) begin : bg_ff_blk
     end
 end
 
-always_comb begin : bg_comb_blk
+always_comb begin
     if (!vblnk_in && !hblnk_in && hcount_in >= RECT_X_POSITION && hcount_in <= (RECT_X_POSITION + RECT_WIDTH) && vcount_in >= RECT_Y_POSITION && vcount_in <= (RECT_Y_POSITION + RECT_HEIGHT)) begin              // - make it it black.                              // Active region:
         rgb_nxt = RECT_COLOR;
     end else begin
