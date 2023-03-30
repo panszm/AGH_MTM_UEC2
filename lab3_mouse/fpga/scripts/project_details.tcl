@@ -48,9 +48,11 @@ set verilog_files {
 }
 
 # Specify VHDL design files location            -- EDIT
-# set vhdl_files {
-#    path/to/file.vhd
-# }
+set vhdl_files {
+   ../rtl/mouse/MouseCtl.vhd
+   ../rtl/mouse/Ps2Interface.vhd
+   ../rtl/mouse/MouseDisplay.vhd
+}
 
 # Specify files for a memory initialization     -- EDIT
 # set mem_files {

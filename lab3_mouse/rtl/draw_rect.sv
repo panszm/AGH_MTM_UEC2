@@ -13,6 +13,8 @@
 module draw_rect (
     input  logic clk,
     input  logic rst,
+    input  logic [11:0] rect_x_position,
+    input  logic [11:0] rect_y_position,
     vga_bus bus_in,
     vga_bus bus_out
 );
@@ -25,9 +27,7 @@ import vga_pkg::*;
  */
 logic [11:0] rgb_nxt;
 
-localparam RECT_X_POSITION = 50,
-           RECT_Y_POSITION = 50,
-           RECT_WIDTH = 50,
+localparam RECT_WIDTH = 50,
            RECT_HEIGHT = 100,
            RECT_COLOR = 12'hb_9_b;
 
@@ -57,7 +57,7 @@ always_ff @(posedge clk) begin
 end
 
 always_comb begin
-    if (!bus_in.vblnk && !bus_in.hblnk && bus_in.hcount >= RECT_X_POSITION && bus_in.hcount < (RECT_X_POSITION + RECT_WIDTH) && bus_in.vcount >= RECT_Y_POSITION && bus_in.vcount < (RECT_Y_POSITION + RECT_HEIGHT)) begin   
+    if (!bus_in.vblnk && !bus_in.hblnk && bus_in.hcount >= rect_x_position && bus_in.hcount < (rect_x_position + RECT_WIDTH) && bus_in.vcount >= rect_y_position && bus_in.vcount < (rect_y_position + RECT_HEIGHT)) begin   
         rgb_nxt = RECT_COLOR;
     end else begin
         rgb_nxt = bus_in.rgb;

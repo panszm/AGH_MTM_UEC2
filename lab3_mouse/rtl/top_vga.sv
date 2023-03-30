@@ -16,7 +16,10 @@
 
 module top_vga (
     input  logic clk,
+    input  logic clk100MHz,
     input  logic rst,
+    inout  logic ps2_clk,
+    inout  logic ps2_data,
     output logic vs,
     output logic hs,
     output logic [3:0] r,
@@ -78,14 +81,28 @@ draw_bg u_draw_bg (
     .bus_out    (bus_bg.OUT)
 );
 
+logic [11:0] rect_x_position, rect_y_position;
+
+MouseCtl mouse_ctl(
+    .clk(clk100MHz),
+    .rst,
+    .xpos(rect_x_position),
+    .ypos(rect_y_position),
+    .ps2_clk(ps2_clk),
+    .ps2_data(ps2_data)
+);
+
 draw_rect u_draw_rect (
     .clk,
     .rst,
+
+    .rect_x_position(rect_x_position),
+    .rect_y_position(rect_y_position),
 
     .bus_in     (bus_bg.IN),
     .bus_out    (bus_rect.OUT)
 );
 
-
+MouseDisplay mouse_display
 
 endmodule
