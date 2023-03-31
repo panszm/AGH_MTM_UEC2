@@ -16,7 +16,6 @@
 
 module top_vga_basys3 (
     input  wire clk,
-    input  wire clk100MHz,
     input  wire btnC,
     output wire Vsync,
     output wire Hsync,
@@ -70,7 +69,7 @@ clk_wiz_0 clk_wiz (
 
 ODDR pclk_oddr (
     .Q(pclk_mirror),
-    .C(pclk),
+    .C(clk40),
     .CE(1'b1),
     .D1(1'b1),
     .D2(1'b0),

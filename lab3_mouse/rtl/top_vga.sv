@@ -43,13 +43,16 @@ vga_bus bus_bg();
 // VGA signals from rect
 vga_bus bus_rect();
 
+// VGA signals from mouse
+vga_bus bus_mouse();
+
 /**
  * Signals assignments
  */
 
-assign vs = bus_rect.vsync;
-assign hs = bus_rect.hsync;
-assign {r,g,b} = bus_rect.rgb;
+assign vs = bus_mouse.vsync;
+assign hs = bus_mouse.hsync;
+assign {r,g,b} = bus_mouse.rgb;
 
 
 /**
@@ -84,7 +87,7 @@ draw_bg u_draw_bg (
 logic [11:0] rect_x_position, rect_y_position;
 
 MouseCtl mouse_ctl(
-    .clk(clk100MHz),
+    .clk(clk),
     .rst,
     .xpos(rect_x_position),
     .ypos(rect_y_position),
@@ -103,6 +106,15 @@ draw_rect u_draw_rect (
     .bus_out    (bus_rect.OUT)
 );
 
-MouseDisplay mouse_display
+draw_mouse u_draw_mouse(
+    .clk,
+    .rst,
+
+    .rect_x_position(rect_x_position),
+    .rect_y_position(rect_y_position),
+
+    .bus_in     (bus_rect.IN),
+    .bus_out    (bus_mouse.OUT)
+);
 
 endmodule

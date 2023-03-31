@@ -40,6 +40,7 @@ logic clk, rst;
 wire pclk;
 wire vs, hs;
 wire [3:0] r, g, b;
+wire ps2_clk, ps2_data;
 
 
 /**
@@ -64,7 +65,9 @@ top_vga_basys3 dut (
     .vgaRed(r),
     .vgaGreen(g),
     .vgaBlue(b),
-    .JA1(pclk)
+    .JA1(pclk),
+    .PS2Clk(ps2_clk),
+    .PS2Data(ps2_data)
 );
 
 tiff_writer #(
