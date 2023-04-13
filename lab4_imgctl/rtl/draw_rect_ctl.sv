@@ -43,12 +43,6 @@ always_comb begin
         is_dropped_nxt = is_dropped;
     end;
 
-    if(is_dropped && ypos + (velocity >> 27) < VISIBLE_HEIGHT - RECT_HEIGHT) begin
-        velocity_nxt = velocity + ACCELERATION;
-    end else begin
-        velocity_nxt = -(velocity >> 1);
-    end;
-
     if(is_dropped) begin
         xpos_nxt = xpos;
     end else begin
@@ -56,15 +50,18 @@ always_comb begin
     end;
 
     if(is_dropped && velocity != 0) begin
-        if(ypos + (velocity >> 27) >= VISIBLE_HEIGHT - RECT_HEIGHT && !fall_counter[21]) begin
+        if(ypos + (velocity >> 27) > VISIBLE_HEIGHT - RECT_HEIGHT && !fall_counter[21]) begin
             ypos_nxt = VISIBLE_HEIGHT - RECT_HEIGHT;
+            velocity_nxt = -1 * (velocity >> 1);
             fall_counter_nxt = 28'hfffffff;
         end else if(!fall_counter[21]) begin
             ypos_nxt = ypos + (velocity >> 27);
             fall_counter_nxt = 28'hfffffff;
+            velocity_nxt = velocity + ACCELERATION;
         end else begin
             ypos_nxt = ypos;
             fall_counter_nxt = fall_counter - 1;
+            velocity_nxt = velocity + ACCELERATION;
         end;
     end else if (is_dropped) begin
         ypos_nxt = ypos;
