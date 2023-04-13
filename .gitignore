@@ -21,3 +21,4 @@ vivado.log
 */*.tif
 */*.bit
 */*.log
+.dvt/default.build.auto.1
