@@ -134,8 +134,8 @@ draw_mouse u_draw_mouse(
     .clk,
     .rst,
 
-    .rect_x_position(rect_x_position),
-    .rect_y_position(rect_y_position),
+    .rect_x_position(mouse_x_position),
+    .rect_y_position(mouse_y_position),
 
     .bus_in     (bus_rect.IN),
     .bus_out    (bus_mouse.OUT)
