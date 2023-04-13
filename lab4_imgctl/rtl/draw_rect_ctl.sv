@@ -66,9 +66,11 @@ always_comb begin
     end else if (is_dropped) begin
         ypos_nxt = ypos;
         fall_counter_nxt = fall_counter - 1;
+        velocity_nxt = velocity + ACCELERATION;
     end else begin
         ypos_nxt = mouse_y_position;
         fall_counter_nxt = fall_counter;
+        velocity_nxt = velocity + ACCELERATION;
     end;
 end;
 
