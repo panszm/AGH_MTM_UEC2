@@ -12,7 +12,7 @@ output logic [11:0] ypos
 );
 
 logic [11:0] xpos_nxt, ypos_nxt;
-int velocity, velocity_nxt;
+integer velocity, velocity_nxt;
 logic is_dropped, is_dropped_nxt;
 logic [27:0] fall_counter, fall_counter_nxt;
 
@@ -52,7 +52,7 @@ always_comb begin
     if(is_dropped && velocity != 0 ) begin
         if(ypos + (velocity / (1 << 27)) > VISIBLE_HEIGHT - RECT_HEIGHT && !fall_counter[21]) begin
             ypos_nxt = VISIBLE_HEIGHT - RECT_HEIGHT;
-            velocity_nxt = signed'(-1* (velocity / 2));
+            velocity_nxt = -1 * (velocity / 2);
             fall_counter_nxt = 28'hfffffff;
         end else if(!fall_counter[21]) begin
             ypos_nxt = ypos + (velocity  / (1 << 27));
