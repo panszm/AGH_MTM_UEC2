@@ -39,6 +39,7 @@ set sv_files {
     ../rtl/draw_rect.sv
     ../rtl/top_vga.sv
     ../rtl/draw_mouse.sv
+    ../rtl/image/image_rom.sv
     rtl/top_vga_basys3.sv
 }
 
@@ -56,6 +57,6 @@ set vhdl_files {
 }
 
 # Specify files for a memory initialization     -- EDIT
-# set mem_files {
-#    path/to/file.data
-# }
+set mem_files {
+   ../rtl/image/image_rom.data
+}

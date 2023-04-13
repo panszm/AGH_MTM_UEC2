@@ -95,6 +95,15 @@ MouseCtl mouse_ctl(
     .ps2_data(ps2_data)
 );
 
+
+logic [11:0] img_address, img_rgb;
+
+image_rom u_image_rom (
+    .clk,
+    .address(img_address),
+    .rgb(img_rgb)
+);
+
 draw_rect u_draw_rect (
     .clk,
     .rst,
@@ -103,7 +112,10 @@ draw_rect u_draw_rect (
     .rect_y_position(rect_y_position),
 
     .bus_in     (bus_bg.IN),
-    .bus_out    (bus_rect.OUT)
+    .bus_out    (bus_rect.OUT),
+
+    .pixel_addr(img_address),
+    .rgb_pixel(img_rgb)
 );
 
 draw_mouse u_draw_mouse(

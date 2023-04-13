@@ -16,6 +16,7 @@ sv work ../../rtl/vga_pkg.sv \
         ../../rtl/draw_rect.sv \
         ../../rtl/draw_mouse.sv \
         ../../rtl/top_vga.sv \
+        ../../rtl/image/image_rom.sv \
         ../../fpga/rtl/top_vga_basys3.sv \
         ../common/tiff_writer.sv \
         top_fpga_tb.sv \
