@@ -84,13 +84,15 @@ draw_bg u_draw_bg (
     .bus_out    (bus_bg.OUT)
 );
 
-logic [11:0] rect_x_position, rect_y_position;
+logic mouse_left;
+logic [11:0] mouse_x_position, mouse_y_position, rect_x_position, rect_y_position;
 
 MouseCtl mouse_ctl(
     .clk(clk),
     .rst,
-    .xpos(rect_x_position),
-    .ypos(rect_y_position),
+    .left(mouse_left),
+    .xpos(mouse_x_position),
+    .ypos(mouse_y_position),
     .ps2_clk(ps2_clk),
     .ps2_data(ps2_data)
 );
@@ -102,6 +104,16 @@ image_rom u_image_rom (
     .clk,
     .address(img_address),
     .rgb(img_rgb)
+);
+
+draw_rect_ctl u_draw_rect_ctl (
+    .clk,
+    .rst,
+    .mouse_left(mouse_left),
+    .mouse_x_position(mouse_x_position),
+    .mouse_y_position(mouse_y_position),
+    .xpos(rect_x_position),
+    .ypos(rect_y_position)
 );
 
 draw_rect u_draw_rect (
