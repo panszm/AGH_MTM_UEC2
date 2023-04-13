@@ -18,7 +18,7 @@ logic is_dropped, is_dropped_nxt, is_falling, is_falling_nxt;
 
 localparam VISIBLE_HEIGHT = 600,
 RECT_HEIGHT = 64,
-ACCELERATION = 16;
+ACCELERATION = 16 >> 23;
 
 always_ff @(posedge clk) begin
     if(rst) begin
@@ -59,14 +59,14 @@ always_comb begin
 
     if(is_dropped && velocity != 0) begin
         if (is_falling) begin
-            ypos_nxt = ypos + velocity;
+            ypos_nxt = ypos <<23 + velocity;
         end else begin
-            ypos_nxt = ypos - velocity;
+            ypos_nxt = ypos <<23 - velocity;
         end
     end else if (is_dropped) begin
-        ypos_nxt = ypos;
+        ypos_nxt = ypos << 23;
     end else begin
-        ypos_nxt = mouse_y_position;
+        ypos_nxt = mouse_y_position << 23;
     end;
 end;
 
