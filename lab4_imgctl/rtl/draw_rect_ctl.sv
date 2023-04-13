@@ -18,7 +18,7 @@ logic is_dropped, is_dropped_nxt, is_falling, is_falling_nxt;
 
 localparam VISIBLE_HEIGHT = 600,
 RECT_HEIGHT = 64,
-ACCELERATION = 16 >> 23;
+ACCELERATION = 16;
 
 always_ff @(posedge clk) begin
     if(rst) begin
