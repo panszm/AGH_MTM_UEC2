@@ -50,7 +50,7 @@ always_comb begin
     end;
 
     if(is_dropped && velocity != 0) begin
-        if(ypos + (velocity / (1 << 27)) > VISIBLE_HEIGHT - RECT_HEIGHT && !fall_counter[21]) begin
+        if(ypos + (velocity / (1 << 27)) > VISIBLE_HEIGHT - RECT_HEIGHT ) begin
             ypos_nxt = VISIBLE_HEIGHT - RECT_HEIGHT;
             velocity_nxt = -1 * (velocity / 2);
             fall_counter_nxt = 28'hfffffff;
