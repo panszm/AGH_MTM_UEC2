@@ -12,8 +12,8 @@ output logic [11:0] ypos
 );
 
 logic [11:0] xpos_nxt, ypos_nxt;
-logic [31:0] velocity, velocity_nxt;
-logic is_dropped, is_dropped_nxt, is_falling, is_falling_nxt;
+int velocity, velocity_nxt;
+logic is_dropped, is_dropped_nxt;
 logic [27:0] fall_counter, fall_counter_nxt;
 
 localparam VISIBLE_HEIGHT = 600,
@@ -25,14 +25,12 @@ always_ff @(posedge clk) begin
         xpos <= 0;
         ypos <= 0;
         is_dropped <= 0;
-        is_falling <= 0;
         velocity <= 0;
         fall_counter <= 28'hfffffff;
     end else begin
         xpos <= xpos_nxt;
         ypos <= ypos_nxt;
         is_dropped <= is_dropped_nxt;
-        is_falling <= is_falling_nxt;
         velocity <= velocity_nxt;
         fall_counter <= fall_counter_nxt;
     end
@@ -45,12 +43,10 @@ always_comb begin
         is_dropped_nxt = is_dropped;
     end;
 
-    if(is_dropped && ypos < VISIBLE_HEIGHT - RECT_HEIGHT) begin
+    if(is_dropped && ypos + (velocity >> 27) < VISIBLE_HEIGHT - RECT_HEIGHT) begin
         velocity_nxt = velocity + ACCELERATION;
-        is_falling_nxt = 1;
     end else begin
-        velocity_nxt = velocity >> 1;
-        is_falling_nxt = 0;
+        velocity_nxt = -(velocity >> 1);
     end;
 
     if(is_dropped) begin
@@ -60,15 +56,11 @@ always_comb begin
     end;
 
     if(is_dropped && velocity != 0) begin
-        if(ypos + (velocity >> 25) > VISIBLE_HEIGHT - RECT_HEIGHT && !fall_counter[23]) begin
+        if(ypos + (velocity >> 27) >= VISIBLE_HEIGHT - RECT_HEIGHT && !fall_counter[21]) begin
             ypos_nxt = VISIBLE_HEIGHT - RECT_HEIGHT;
             fall_counter_nxt = 28'hfffffff;
-        end else if(!fall_counter[23]) begin
-            if (is_falling) begin
-                ypos_nxt = ypos + (velocity >> 25);
-            end else begin
-                ypos_nxt = ypos - (velocity >> 25);
-            end
+        end else if(!fall_counter[21]) begin
+            ypos_nxt = ypos + (velocity >> 27);
             fall_counter_nxt = 28'hfffffff;
         end else begin
             ypos_nxt = ypos;
