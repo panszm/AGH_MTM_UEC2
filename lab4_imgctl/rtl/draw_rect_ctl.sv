@@ -19,7 +19,7 @@ logic falling, falling_nxt;
 
 localparam VISIBLE_HEIGHT = 600,
 RECT_HEIGHT = 64,
-ACCELERATION = 1;
+ACCELERATION = 4;
 
 always_ff @(posedge clk) begin
     if(rst) begin
@@ -53,13 +53,13 @@ always_comb begin
     end;
 
     if(is_dropped) begin
-        if(falling && (ypos + (velocity >> 27)) >= (VISIBLE_HEIGHT - RECT_HEIGHT ) && !fall_counter[16]) begin
+        if(falling && (ypos + (velocity >> 27)) >= (VISIBLE_HEIGHT - RECT_HEIGHT ) && !fall_counter[19]) begin
             ypos_nxt = VISIBLE_HEIGHT - RECT_HEIGHT;
             velocity_nxt = velocity >> 1;
             falling_nxt = 0;
             fall_counter_nxt = 28'hfffffff;
-        end else if(!fall_counter[16]) begin
-            if (!falling && velocity < ACCELERATION) begin
+        end else if(!fall_counter[19]) begin
+            if (!falling && velocity < (2*ACCELERATION)) begin
                 falling_nxt = 1;
             end else begin
                 falling_nxt = falling;
