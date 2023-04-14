@@ -12,13 +12,14 @@ output logic [11:0] ypos
 );
 
 logic [11:0] xpos_nxt, ypos_nxt;
-integer velocity, velocity_nxt;
+logic signed [47:0] velocity, velocity_nxt;
 logic is_dropped, is_dropped_nxt;
 logic [27:0] fall_counter, fall_counter_nxt;
+logic falling, falling_nxt;
 
 localparam VISIBLE_HEIGHT = 600,
 RECT_HEIGHT = 64,
-ACCELERATION = 16;
+ACCELERATION = 4;
 
 always_ff @(posedge clk) begin
     if(rst) begin
@@ -27,12 +28,14 @@ always_ff @(posedge clk) begin
         is_dropped <= 0;
         velocity <= 0;
         fall_counter <= 28'hfffffff;
+        falling <= 1;
     end else begin
         xpos <= xpos_nxt;
         ypos <= ypos_nxt;
         is_dropped <= is_dropped_nxt;
         velocity <= velocity_nxt;
         fall_counter <= fall_counter_nxt;
+        falling <= falling_nxt;
     end
 end
 
@@ -49,28 +52,41 @@ always_comb begin
         xpos_nxt = mouse_x_position;
     end;
 
-    if(is_dropped && velocity != 0 ) begin
-        if(ypos + (velocity / (1 << 27)) > VISIBLE_HEIGHT - RECT_HEIGHT && !fall_counter[21]) begin
+    if(is_dropped) begin
+        if(falling && (ypos + (velocity >> 27)) >= (VISIBLE_HEIGHT - RECT_HEIGHT ) && !fall_counter[19]) begin
             ypos_nxt = VISIBLE_HEIGHT - RECT_HEIGHT;
-            velocity_nxt = -1 * (velocity / 2);
+            velocity_nxt = velocity >> 1;
+            falling_nxt = 0;
             fall_counter_nxt = 28'hfffffff;
-        end else if(!fall_counter[21]) begin
-            ypos_nxt = ypos + (velocity  / (1 << 27));
+        end else if(!fall_counter[19]) begin
+            if (!falling && velocity < ACCELERATION) begin
+                falling_nxt = 1;
+            end else begin
+                falling_nxt = falling;
+            end
+            if(falling) begin 
+                ypos_nxt = ypos + (velocity >> 27);
+                velocity_nxt = velocity + ACCELERATION;
+            end else begin
+                ypos_nxt = ypos + ~(velocity >> 27);
+                velocity_nxt = velocity - ACCELERATION;
+            end
             fall_counter_nxt = 28'hfffffff;
-            velocity_nxt = velocity + ACCELERATION;
         end else begin
             ypos_nxt = ypos;
             fall_counter_nxt = fall_counter - 1;
-            velocity_nxt = velocity + ACCELERATION;
+            if(falling) begin 
+                velocity_nxt = velocity + ACCELERATION;
+            end else begin
+                velocity_nxt = velocity - ACCELERATION;
+            end
+            falling_nxt = falling;
         end;
-    end else if (is_dropped) begin
-        ypos_nxt = ypos;
-        fall_counter_nxt = fall_counter - 1;
-        velocity_nxt = velocity + ACCELERATION;
     end else begin
         ypos_nxt = mouse_y_position;
         fall_counter_nxt = fall_counter;
-        velocity_nxt = velocity + ACCELERATION;
+        velocity_nxt = velocity;
+        falling_nxt = falling;
     end;
 end;
 
