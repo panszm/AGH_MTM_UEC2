@@ -53,7 +53,7 @@ always_comb begin
     end;
 
     if(is_dropped) begin
-        if (falling && velocity < (2*ACCELERATION) && ((ypos + ACCELERATION) > (VISIBLE_HEIGHT - RECT_HEIGHT ) )) begin
+        if (falling && velocity < (2*ACCELERATION) && ((ypos + 2*ACCELERATION) > (VISIBLE_HEIGHT - RECT_HEIGHT ) )) begin
             ypos_nxt = VISIBLE_HEIGHT - RECT_HEIGHT;
             velocity_nxt = 0;
             falling_nxt = 1;
