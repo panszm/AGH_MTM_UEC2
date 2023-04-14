@@ -53,7 +53,7 @@ always_comb begin
     end;
 
     if(is_dropped) begin
-        if ((velocity >> 23) < ACCELERATION && ((ypos + ACCELERATION) > (VISIBLE_HEIGHT - RECT_HEIGHT)) && ypos < 2000) begin
+        if ((velocity >> 23) < ACCELERATION && ((ypos + ACCELERATION) > (VISIBLE_HEIGHT - RECT_HEIGHT))) begin
             ypos_nxt = VISIBLE_HEIGHT - RECT_HEIGHT;
             velocity_nxt = 0;
             falling_nxt = 1;
@@ -89,9 +89,9 @@ always_comb begin
         end;
     end else begin
         ypos_nxt = mouse_y_position;
-        fall_counter_nxt = fall_counter;
-        velocity_nxt = velocity;
-        falling_nxt = falling;
+        fall_counter_nxt = 0;
+        velocity_nxt = 0;
+        falling_nxt = 1;
     end;
 end;
 
