@@ -58,7 +58,7 @@ always_comb begin
             velocity_nxt = velocity >> 1;
             falling_nxt = 0;
             fall_counter_nxt = 28'hfffffff;
-        end else if(!fall_counter[19]) begin
+        end else if(!fall_counter[16]) begin
             if (!falling && velocity < ACCELERATION) begin
                 falling_nxt = 1;
             end else begin
