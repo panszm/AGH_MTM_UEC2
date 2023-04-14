@@ -58,7 +58,7 @@ always_comb begin
             velocity_nxt = 0;
             falling_nxt = 1;
             fall_counter_nxt = 28'hfffffff;
-        end else if(falling && (ypos + (velocity >> 23)) > (VISIBLE_HEIGHT - RECT_HEIGHT ) && !fall_counter[20]) begin
+        end else if(falling && ((ypos + (velocity >> 23)) > (VISIBLE_HEIGHT - RECT_HEIGHT )) && !fall_counter[19]) begin
             ypos_nxt = VISIBLE_HEIGHT - RECT_HEIGHT;
             velocity_nxt = velocity >> 1;
             falling_nxt = 0;
