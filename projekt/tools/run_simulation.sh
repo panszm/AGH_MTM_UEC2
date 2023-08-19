@@ -102,5 +102,5 @@ while getopts aglrs:t: option; do
 done
 
 if [[ ${test_name} ]]; then
-    execute_test ${test_name}
+    execute_test top_fpga
 fi

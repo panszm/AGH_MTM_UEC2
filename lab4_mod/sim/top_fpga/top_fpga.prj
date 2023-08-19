@@ -15,7 +15,6 @@ sv work ../../rtl/vga_pkg.sv \
         ../../rtl/draw_bg.sv \
         ../../rtl/draw_rect.sv \
         ../../rtl/draw_rect_ctl.sv \
-        ../../rtl/draw_rect_char.sv \
         ../../rtl/draw_mouse.sv \
         ../../rtl/top_vga.sv \
         ../../rtl/image/image_rom.sv \
@@ -26,8 +25,7 @@ sv work ../../rtl/vga_pkg.sv \
 # compile glbl module - required for IP simulation
 verilog work ../common/glbl.v \
         ../../rtl/clk_wiz_0_clk_wiz.v \
-        ../../rtl/clk_wiz_0.v \
-        ../../rtl/font_rom.v
+        ../../rtl/clk_wiz_0.v
 
 vhdl work ../../rtl/mouse/MouseCtl.vhd \
         ../../rtl/mouse/MouseDisplay.vhd \

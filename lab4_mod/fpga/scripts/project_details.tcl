@@ -38,7 +38,6 @@ set sv_files {
     ../rtl/draw_bg.sv
     ../rtl/draw_rect.sv
     ../rtl/draw_rect_ctl.sv
-    ../rtl/draw_rect_char.sv
     ../rtl/top_vga.sv
     ../rtl/draw_mouse.sv
     ../rtl/image/image_rom.sv
@@ -49,8 +48,6 @@ set sv_files {
 set verilog_files {
     ../rtl/clk_wiz_0_clk_wiz.v
     ../rtl/clk_wiz_0.v
-    ../rtl/font_rom.v
-    ../rtl/delay.v
 }
 
 # Specify VHDL design files location            -- EDIT

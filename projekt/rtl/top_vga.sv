@@ -130,6 +130,26 @@ draw_rect u_draw_rect (
     .rgb_pixel(img_rgb)
 );
 
+vga_bus bus_char();
+logic[7:0] char_pixels;
+logic [10:0] char_address;
+
+draw_rect_char u_draw_rect_char(
+    .clk,
+    .rst,
+
+    .bus_in(bus_rect.IN),
+    .bus_out(bus_char.OUT),
+    .char_pixels(char_pixels),
+    .address(char_address)
+);
+
+font_rom u_font_rom(
+    .clk,
+    .addr(char_address),
+    .char_line_pixels(char_pixels)
+);
+
 draw_mouse u_draw_mouse(
     .clk,
     .rst,
@@ -137,7 +157,7 @@ draw_mouse u_draw_mouse(
     .rect_x_position(mouse_x_position),
     .rect_y_position(mouse_y_position),
 
-    .bus_in     (bus_rect.IN),
+    .bus_in     (bus_char.IN),
     .bus_out    (bus_mouse.OUT)
 );
 
