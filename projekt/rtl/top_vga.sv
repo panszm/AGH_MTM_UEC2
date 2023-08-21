@@ -18,6 +18,10 @@ module top_vga (
     input  logic clk,
     input  logic clk100MHz,
     input  logic rst,
+    input  logic top,
+    input  logic left,
+    input  logic bottom,
+    input  logic right,
     inout  logic ps2_clk,
     inout  logic ps2_data,
     output logic vs,
@@ -40,20 +44,17 @@ wire vblnk_tim, hblnk_tim;
 // VGA signals from background
 vga_bus bus_bg();
 
-// VGA signals from rect
-vga_bus bus_rect();
+vga_bus bus_board();
+vga_bus bus_board_numbers();
 
-// VGA signals from mouse
-vga_bus bus_mouse();
-
+vga_bus bus_out();
 /**
  * Signals assignments
  */
 
-assign vs = bus_mouse.vsync;
-assign hs = bus_mouse.hsync;
-assign {r,g,b} = bus_mouse.rgb;
-
+assign vs = bus_out.vsync;
+assign hs = bus_out.hsync;
+assign {r,g,b} = bus_out.rgb;
 
 /**
  * Submodules instances
@@ -97,68 +98,84 @@ MouseCtl mouse_ctl(
     .ps2_data(ps2_data)
 );
 
+logic[2:0] board_size;
+logic is_game_on;
 
-logic [11:0] img_address, img_rgb;
-
-image_rom u_image_rom (
-    .clk,
-    .address(img_address),
-    .rgb(img_rgb)
-);
-
-draw_rect_ctl u_draw_rect_ctl (
+game_menu u_game_menu(
     .clk,
     .rst,
-    .mouse_left(mouse_left),
-    .mouse_x_position(mouse_x_position),
-    .mouse_y_position(mouse_y_position),
-    .xpos(rect_x_position),
-    .ypos(rect_y_position)
+    .top,
+    .bottom,
+    .mouse_left,
+    .board_size,
+    .is_game_on
 );
 
-draw_rect u_draw_rect (
-    .clk,
-    .rst,
-
-    .rect_x_position(rect_x_position),
-    .rect_y_position(rect_y_position),
-
-    .bus_in     (bus_bg.IN),
-    .bus_out    (bus_rect.OUT),
-
-    .pixel_addr(img_address),
-    .rgb_pixel(img_rgb)
-);
-
-vga_bus bus_char();
 logic[7:0] char_pixels;
 logic [10:0] char_address;
 
-draw_rect_char u_draw_rect_char(
+draw_single_num u_draw_single_num(
     .clk,
     .rst,
+    .is_game_on,
+    .board_size,
 
-    .bus_in(bus_rect.IN),
-    .bus_out(bus_char.OUT),
-    .char_pixels(char_pixels),
+    .bus_in(bus_bg.IN),
+    .bus_out(bus_board.OUT),
+    .char_pixels,
     .address(char_address)
 );
 
-font_rom u_font_rom(
+font_rom_numerical u_font_rom_numerical(
     .clk,
     .addr(char_address),
     .char_line_pixels(char_pixels)
 );
 
-draw_mouse u_draw_mouse(
+logic [4:0] board [15:0][15:0];
+
+game_board_ctl u_game_board_ctl(
     .clk,
     .rst,
+    .top,
+    .bottom,
+    .left,
+    .right,
+    .mouse_left,
+    .is_game_on,
+    .board_size,
+    .board
+);
 
-    .rect_x_position(mouse_x_position),
-    .rect_y_position(mouse_y_position),
+game_board_draw u_game_board_draw(
+    .clk,
+    .rst,
+    .is_game_on,
+    .board_size,
+    .board,
+    .bus_in(bus_board.IN),
+    .bus_out(bus_board_numbers.OUT)
+);
 
-    .bus_in     (bus_char.IN),
-    .bus_out    (bus_mouse.OUT)
+logic[7:0] char_pixels_2;
+logic [10:0] char_address_2;
+
+game_board_numbers_draw u_game_board_numbers_draw(
+    .clk,
+    .rst,
+    .is_game_on,
+    .board_size,
+    .board,
+    .char_pixels(char_pixels_2),
+    .bus_in(bus_board_numbers.IN),
+    .bus_out(bus_out.OUT),
+    .address(char_address_2)
+);
+
+font_rom_numerical u2_font_rom_numerical(
+    .clk,
+    .addr(char_address_2),
+    .char_line_pixels(char_pixels_2)
 );
 
 endmodule

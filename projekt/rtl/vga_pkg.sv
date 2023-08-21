@@ -9,17 +9,16 @@
 
 package vga_pkg;
 
-// Parameters for VGA Display 800 x 600 @ 60fps using a 40 MHz clock;
 localparam   
-      VISIBLE_HEIGHT = 600,
-      VERTICAL_FRONT_PORCH = 1,
-      VERTICAL_SYNC_PULSE = 4,
-      FULL_HEIGHT = 628,
+      VISIBLE_HEIGHT = 768,
+      VERTICAL_FRONT_PORCH = 3,
+      VERTICAL_SYNC_PULSE = 6,
+      FULL_HEIGHT = 806,
       
-      VISIBLE_WIDTH = 800,
-      HORIZONTAL_FRONT_PORCH = 40,
-      HORIZONTAL_SYNC_PULSE = 128,
-      FULL_WIDTH = 1056;
+      VISIBLE_WIDTH = 1024,
+      HORIZONTAL_FRONT_PORCH = 24,
+      HORIZONTAL_SYNC_PULSE = 136,
+      FULL_WIDTH = 1344;
 
 // Add VGA timing parameters here and refer to them in other modules.
 
