@@ -11,6 +11,8 @@ module game_board_ctl (
     input  logic is_game_on,
     input  logic[2:0] board_size,
     output logic [4:0] board [15:0][15:0]
+    // output logic[3:0] selection_x,
+    // output logic[3:0] selection_y
 );
 
 /**
@@ -19,8 +21,8 @@ module game_board_ctl (
 logic [4:0] board_nxt [15:0][15:0];
 logic[30:0] debounce_reg = 0;
 logic[30:0] debounce_reg_nxt = 0;
-logic selection_x = 0;
-logic selection_y = 0;
+// logic[3:0] selection_x_nxt = 0;
+// logic[3:0] selection_y_nxt = 0;
 
 always_ff @(posedge clk) begin
     if(rst) begin

@@ -13,6 +13,17 @@ module game_board_draw (
 /**
  * Local variables and signals
  */
+localparam  SCREEN_HEIGHT = 768,
+			SCREEN_WIDTH = 1024,
+			FONT_COLOR = 12'h7_7_7,
+            CHAR_WIDTH = 16,
+            CHAR_HEIGHT = 16;
+logic [15:0] RECT_CHAR_X, RECT_CHAR_Y, RECT_CHAR_WIDTH, RECT_CHAR_HEIGHT;
+assign RECT_CHAR_X = (SCREEN_WIDTH - CHAR_WIDTH * board_size * board_size) >>1;
+assign RECT_CHAR_Y = (SCREEN_HEIGHT - CHAR_HEIGHT * board_size * board_size) >>1;
+assign RECT_CHAR_WIDTH = CHAR_WIDTH * board_size * board_size;
+assign RECT_CHAR_HEIGHT = CHAR_HEIGHT * board_size * board_size;
+
 logic [11:0] rgb_out_nxt;
 
 always_ff @(posedge clk) begin
@@ -36,14 +47,11 @@ always_ff @(posedge clk) begin
 end
 
 always_comb begin
-        // if(mouse_left) begin
-        // end else if(top) begin
-        // end else if(bottom) begin
-        // end else if(left) begin
-        // end else if(right) begin
-        // end else begin
-        // end
-        rgb_out_nxt <= bus_in.rgb;
+    if(is_game_on && ((bus_in.hcount - RECT_CHAR_X)%(16*board_size) == 0 || (bus_in.vcount - RECT_CHAR_Y)%(16*board_size) == 0) && bus_in.hcount > RECT_CHAR_X && bus_in.hcount < (RECT_CHAR_X + RECT_CHAR_WIDTH) && bus_in.vcount > RECT_CHAR_Y && bus_in.vcount < RECT_CHAR_Y + RECT_CHAR_HEIGHT) begin
+        rgb_out_nxt = FONT_COLOR;
+    end else begin
+        rgb_out_nxt = bus_in.rgb;
+    end
 end
 
 

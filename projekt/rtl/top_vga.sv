@@ -111,7 +111,7 @@ game_menu u_game_menu(
     .is_game_on
 );
 
-logic[7:0] char_pixels;
+logic[15:0] char_pixels;
 logic [10:0] char_address;
 
 draw_single_num u_draw_single_num(
@@ -157,7 +157,7 @@ game_board_draw u_game_board_draw(
     .bus_out(bus_board_numbers.OUT)
 );
 
-logic[7:0] char_pixels_2;
+logic[15:0] char_pixels_2;
 logic [10:0] char_address_2;
 
 game_board_numbers_draw u_game_board_numbers_draw(

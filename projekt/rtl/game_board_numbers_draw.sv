@@ -6,7 +6,7 @@ module game_board_numbers_draw (
     input  logic is_game_on,
     input  logic[2:0] board_size,
     input logic [4:0] board [15:0][15:0],
-    input logic [7:0] char_pixels,
+    input logic [15:0] char_pixels,
     vga_bus bus_in,
     vga_bus bus_out,
     output logic [10:0] address
@@ -17,7 +17,7 @@ import vga_pkg::*;
 localparam  SCREEN_HEIGHT = 768,
 			SCREEN_WIDTH = 1024,
 			FONT_COLOR = 12'hf_f_f,
-            CHAR_WIDTH = 8,
+            CHAR_WIDTH = 16,
             CHAR_HEIGHT = 16;
 
 logic [15:0] RECT_CHAR_X, RECT_CHAR_Y, RECT_CHAR_WIDTH, RECT_CHAR_HEIGHT;
@@ -49,18 +49,13 @@ always_ff @(posedge clk) begin
 end
 
 always_comb begin 
-    // if(is_game_on && bus_in.hcount > 400) begin
-    // 	rgb_out_nxt = FONT_COLOR;
-	// end else begin
-	// 	rgb_out_nxt = bus_in.rgb;
-    // end
-	if(is_game_on && char_pixels[(4*board_size - bus_in.hcount[2:0])%8 ] && bus_in.hcount >= RECT_CHAR_X && bus_in.hcount < RECT_CHAR_X + RECT_CHAR_WIDTH && bus_in.vcount >= RECT_CHAR_Y && bus_in.vcount < RECT_CHAR_Y + RECT_CHAR_HEIGHT) begin
+	if(is_game_on && char_pixels[(16*board_size - (bus_in.hcount - RECT_CHAR_X))%16 ] && bus_in.hcount >= RECT_CHAR_X && bus_in.hcount < RECT_CHAR_X + RECT_CHAR_WIDTH && bus_in.vcount >= RECT_CHAR_Y && bus_in.vcount < RECT_CHAR_Y + RECT_CHAR_HEIGHT) begin
 		rgb_out_nxt = FONT_COLOR;
 	end else begin
 		rgb_out_nxt = bus_in.rgb;
 	end;
 end;
 
-assign address = (board[(bus_in.vcount - RECT_CHAR_Y)/16][(bus_in.hcount - RECT_CHAR_X)/8] + 1) *16 + (bus_in.vcount - RECT_CHAR_Y)%16;
+assign address = (board[(bus_in.vcount - RECT_CHAR_Y)/16][(bus_in.hcount - RECT_CHAR_X)/16] + 1) *16 + (bus_in.vcount - RECT_CHAR_Y)%16;
 
 endmodule

@@ -44,6 +44,7 @@ set sv_files {
     ../rtl/game_board_ctl.sv
     ../rtl/game_board_draw.sv
     ../rtl/game_board_numbers_draw.sv
+    ../rtl/font_rom_numerical.sv
 }
 
 # Specify Verilog design files location         -- EDIT
@@ -51,7 +52,6 @@ set verilog_files {
     ../rtl/clk_wiz_0_clk_wiz.v
     ../rtl/clk_wiz_0.v
     ../rtl/font_rom.v
-    ../rtl/font_rom_numerical.v
     ../rtl/delay.v
 }
 

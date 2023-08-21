@@ -8,7 +8,7 @@ module draw_single_num (
 
     vga_bus bus_in,
     vga_bus bus_out,
-    input logic [7:0] char_pixels,
+    input logic [15:0] char_pixels,
     output logic [10:0] address
 );
 
@@ -17,9 +17,9 @@ import vga_pkg::*;
 localparam  SCREEN_HEIGHT = 768,
 			SCREEN_WIDTH = 1024,
 			FONT_COLOR = 12'hf_f_f,
-            RECT_CHAR_X = 508,
+            RECT_CHAR_X = 504,
             RECT_CHAR_Y = 376,
-            RECT_CHAR_WIDTH = 8,
+            RECT_CHAR_WIDTH = 16,
             RECT_CHAR_HEIGHT = 16;
 			
 logic [11:0] rgb_out_nxt;
@@ -45,7 +45,7 @@ always_ff @(posedge clk) begin
 end
 
 always_comb begin 
-	if(!is_game_on && char_pixels[(4 - bus_in.hcount[2:0])%8 ] && bus_in.hcount >= RECT_CHAR_X && bus_in.hcount < RECT_CHAR_X + RECT_CHAR_WIDTH && bus_in.vcount >= RECT_CHAR_Y && bus_in.vcount < RECT_CHAR_Y + RECT_CHAR_HEIGHT) begin
+	if(!is_game_on && char_pixels[(16 - (bus_in.hcount - RECT_CHAR_X))%16 ] && bus_in.hcount >= RECT_CHAR_X && bus_in.hcount < (RECT_CHAR_X + RECT_CHAR_WIDTH) && bus_in.vcount >= RECT_CHAR_Y && bus_in.vcount < RECT_CHAR_Y + RECT_CHAR_HEIGHT) begin
 		rgb_out_nxt = FONT_COLOR;
 	end else begin
 		rgb_out_nxt = bus_in.rgb;
