@@ -16,7 +16,6 @@
 
 module top_vga (
     input  logic clk,
-    input  logic clk100MHz,
     input  logic rst,
     input  logic top,
     input  logic left,

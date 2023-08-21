@@ -21,11 +21,16 @@ localparam  SCREEN_HEIGHT = 768,
             CHAR_HEIGHT = 16;
 
 logic [15:0] RECT_CHAR_X, RECT_CHAR_Y, RECT_CHAR_WIDTH, RECT_CHAR_HEIGHT;
-assign RECT_CHAR_X = (SCREEN_WIDTH - CHAR_WIDTH * board_size * board_size) >>1;
-assign RECT_CHAR_Y = (SCREEN_HEIGHT - CHAR_HEIGHT * board_size * board_size) >>1;
-assign RECT_CHAR_WIDTH = CHAR_WIDTH * board_size * board_size;
-assign RECT_CHAR_HEIGHT = CHAR_HEIGHT * board_size * board_size;
+assign board_size_squared = board_size * board_size;
+assign RECT_CHAR_X = (SCREEN_WIDTH - CHAR_WIDTH * board_size_squared) >>1;
+assign RECT_CHAR_Y = (SCREEN_HEIGHT - CHAR_HEIGHT * board_size_squared) >>1;
+assign RECT_CHAR_WIDTH = CHAR_WIDTH * board_size_squared;
+assign RECT_CHAR_HEIGHT = CHAR_HEIGHT * board_size_squared;
 			
+assign in_horizontal_range = bus_in.hcount >= RECT_CHAR_X && bus_in.hcount < RECT_CHAR_X + RECT_CHAR_WIDTH;
+assign in_vertical_range = bus_in.vcount >= RECT_CHAR_Y && bus_in.vcount < RECT_CHAR_Y + RECT_CHAR_HEIGHT;
+assign is_pixel_active = char_pixels[(board_size<<4 - (bus_in.hcount - RECT_CHAR_X))&15 ];
+
 logic [11:0] rgb_out_nxt;
 
 always_ff @(posedge clk) begin
@@ -48,14 +53,14 @@ always_ff @(posedge clk) begin
     end
 end
 
-always_comb begin 
-	if(is_game_on && char_pixels[(16*board_size - (bus_in.hcount - RECT_CHAR_X))%16 ] && bus_in.hcount >= RECT_CHAR_X && bus_in.hcount < RECT_CHAR_X + RECT_CHAR_WIDTH && bus_in.vcount >= RECT_CHAR_Y && bus_in.vcount < RECT_CHAR_Y + RECT_CHAR_HEIGHT) begin
+always_ff @(posedge clk) begin
+	if(is_game_on && in_horizontal_range && in_vertical_range && is_pixel_active) begin
 		rgb_out_nxt = FONT_COLOR;
 	end else begin
 		rgb_out_nxt = bus_in.rgb;
 	end;
 end;
 
-assign address = (board[(bus_in.vcount - RECT_CHAR_Y)/16][(bus_in.hcount - RECT_CHAR_X)/16] + 1) *16 + (bus_in.vcount - RECT_CHAR_Y)%16;
+assign address = (board[(bus_in.vcount - RECT_CHAR_Y)>>4][(bus_in.hcount - RECT_CHAR_X)>>4] + 1)<<4 + (bus_in.vcount - RECT_CHAR_Y)&15;
 
 endmodule

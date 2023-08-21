@@ -88,7 +88,6 @@ ODDR pclk_oddr (
 
 top_vga u_top_vga (
     .clk(clk40),
-    .clk100MHz(clk100),
     .rst(btnC),
     .top(btnU),
     .left(btnL),
