@@ -151,7 +151,6 @@ game_board_draw u_game_board_draw(
     .rst,
     .is_game_on,
     .board_size,
-    .board,
     .bus_in(bus_board.IN),
     .bus_out(bus_board_numbers.OUT)
 );

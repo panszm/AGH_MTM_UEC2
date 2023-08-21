@@ -5,7 +5,6 @@ module game_board_draw (
     input  logic rst,
     input  logic is_game_on,
     input  logic[2:0] board_size,
-    input logic [4:0] board [15:0][15:0],
     vga_bus bus_in,
     vga_bus bus_out
 );
