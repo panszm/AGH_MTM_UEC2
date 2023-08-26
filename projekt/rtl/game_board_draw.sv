@@ -17,9 +17,10 @@ localparam  SCREEN_HEIGHT = 768,
 			FONT_COLOR = 12'h7_7_7,
             CHAR_WIDTH = 16,
             CHAR_HEIGHT = 16;
-logic [15:0] RECT_CHAR_X, RECT_CHAR_Y, RECT_CHAR_WIDTH, RECT_CHAR_HEIGHT;
+logic [9:0] RECT_CHAR_X, RECT_CHAR_Y, RECT_CHAR_WIDTH, RECT_CHAR_HEIGHT;
 logic [4:0] board_size_squared;
-logic is_pixel_active, is_pixel_active2;
+logic is_pixel_active_horizontally, is_pixel_active_vertically;
+logic [7:0] chars_column_count, chars_row_count, line_interval;
 assign board_size_squared = board_size * board_size;
 assign RECT_CHAR_X = (SCREEN_WIDTH - CHAR_WIDTH * board_size_squared) >>1;
 assign RECT_CHAR_Y = (SCREEN_HEIGHT - CHAR_HEIGHT * board_size_squared) >>1;
@@ -28,8 +29,12 @@ assign RECT_CHAR_HEIGHT = CHAR_HEIGHT * board_size_squared;
 
 assign in_horizontal_range =  bus_in.hcount > RECT_CHAR_X && bus_in.hcount < (RECT_CHAR_X + RECT_CHAR_WIDTH);
 assign in_vertical_range = bus_in.vcount > RECT_CHAR_Y && bus_in.vcount < (RECT_CHAR_Y + RECT_CHAR_HEIGHT);
-assign is_pixel_active = ((bus_in.hcount - RECT_CHAR_X)&((board_size<<4) - 1)) == 0;
-assign is_pixel_active2 = ((bus_in.vcount - RECT_CHAR_Y)&((board_size<<4) - 1)) == 0;
+
+assign line_interval = board_size<<4;
+assign chars_column_count = (bus_in.hcount - RECT_CHAR_X);
+assign is_pixel_active_horizontally = (chars_column_count%line_interval) == 0;
+assign chars_row_count = (bus_in.vcount - RECT_CHAR_Y);
+assign is_pixel_active_vertically =  (chars_row_count%line_interval) == 0;
 
 logic [11:0] rgb_out_nxt;
 
@@ -54,7 +59,7 @@ always_ff @(posedge clk) begin
 end
 
 always_comb begin
-    if(is_game_on && in_horizontal_range && in_vertical_range && (is_pixel_active || is_pixel_active2)) begin
+    if(is_game_on && in_horizontal_range && in_vertical_range && (is_pixel_active_horizontally || is_pixel_active_vertically)) begin
         rgb_out_nxt = FONT_COLOR;
     end else begin
         rgb_out_nxt = bus_in.rgb;

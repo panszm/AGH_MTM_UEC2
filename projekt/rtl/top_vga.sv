@@ -132,6 +132,7 @@ font_rom_numerical u_font_rom_numerical(
 );
 
 logic [4:0] board [15:0][15:0];
+logic [3:0] selection_x, selection_y;
 
 game_board_ctl u_game_board_ctl(
     .clk,
@@ -143,7 +144,9 @@ game_board_ctl u_game_board_ctl(
     .mouse_left,
     .is_game_on,
     .board_size,
-    .board
+    .board,
+    .selection_x,
+    .selection_y
 );
 
 game_board_draw u_game_board_draw(
@@ -167,7 +170,9 @@ game_board_numbers_draw u_game_board_numbers_draw(
     .char_pixels(char_pixels_2),
     .bus_in(bus_board_numbers.IN),
     .bus_out(bus_out.OUT),
-    .address(char_address_2)
+    .address(char_address_2),
+    .selection_x,
+    .selection_y
 );
 
 font_rom_numerical u2_font_rom_numerical(
