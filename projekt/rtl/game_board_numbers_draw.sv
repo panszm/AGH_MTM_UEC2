@@ -5,7 +5,7 @@ module game_board_numbers_draw (
     input logic rst,
     input  logic is_game_on,
     input  logic[2:0] board_size,
-    input logic [4:0] board [15:0][15:0],
+    input logic [5:0] board [15:0][15:0],
     input logic [15:0] char_pixels,
     vga_bus bus_in,
     vga_bus bus_out,
@@ -19,7 +19,10 @@ import vga_pkg::*;
 localparam  SCREEN_HEIGHT = 768,
 			SCREEN_WIDTH = 1024,
 			FONT_COLOR = 12'hf_f_f,
+			FONT_SELECTION_COLOR_LOCKED = 12'hf_3_3,
+			FONT_LIGHT_SELECTION_COLOR_LOCKED = 12'hf_a_a,
 			FONT_SELECTION_COLOR = 12'h3_3_f,
+			FONT_LIGHT_SELECTION_COLOR = 12'ha_a_f,
             CHAR_WIDTH = 16,
             CHAR_HEIGHT = 16;
 
@@ -63,15 +66,29 @@ end
 always_comb begin 
 	if(is_game_on && in_horizontal_range && in_vertical_range && is_pixel_active) begin
         if(rendered_number_x == selection_x && rendered_number_y == selection_y) begin
-            rgb_out_nxt = FONT_SELECTION_COLOR;
+            if(board[rendered_number_y][rendered_number_x]&1'b1) begin
+                rgb_out_nxt = FONT_SELECTION_COLOR_LOCKED;
+            end else begin
+                rgb_out_nxt = FONT_SELECTION_COLOR;
+            end
+        end else if((rendered_number_x == selection_x) ^ (rendered_number_y == selection_y)) begin
+            if(board[rendered_number_y][rendered_number_x]&1'b1) begin
+                rgb_out_nxt = FONT_LIGHT_SELECTION_COLOR_LOCKED;
+            end else begin
+                rgb_out_nxt = FONT_LIGHT_SELECTION_COLOR;
+            end
         end else begin
-		    rgb_out_nxt = FONT_COLOR;
+            if(board[rendered_number_y][rendered_number_x]&1'b1) begin
+                rgb_out_nxt = FONT_LIGHT_SELECTION_COLOR_LOCKED;
+            end else begin
+                rgb_out_nxt = FONT_COLOR;
+            end
         end
 	end else begin
 		rgb_out_nxt = bus_in.rgb;
 	end;
 end;
 
-assign address = ((board[rendered_number_y][rendered_number_x] + 1)<<4) + ((bus_in.vcount - RECT_CHAR_Y)&15);
+assign address = (((board[rendered_number_y][rendered_number_x]>>1) + 1)<<4) + ((bus_in.vcount - RECT_CHAR_Y)&15);
 
 endmodule

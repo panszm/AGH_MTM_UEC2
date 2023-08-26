@@ -131,7 +131,7 @@ font_rom_numerical u_font_rom_numerical(
     .char_line_pixels(char_pixels)
 );
 
-logic [4:0] board [15:0][15:0];
+logic [5:0] board [15:0][15:0];
 logic [3:0] selection_x, selection_y;
 
 game_board_ctl u_game_board_ctl(
