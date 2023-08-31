@@ -113,6 +113,11 @@ game_menu u_game_menu(
 logic[15:0] char_pixels;
 logic [10:0] char_address;
 
+logic[15:0] char_pixels_2;
+logic [10:0] char_address_2;
+logic incorrect;
+assign incorrect = 0;
+
 draw_single_num u_draw_single_num(
     .clk,
     .rst,
@@ -159,10 +164,6 @@ game_board_draw u_game_board_draw(
     .incorrect
 );
 
-logic[15:0] char_pixels_2;
-logic [10:0] char_address_2;
-logic incorrect;
-
 game_board_numbers_draw u_game_board_numbers_draw(
     .clk,
     .rst,
@@ -181,12 +182,6 @@ font_rom_numerical u2_font_rom_numerical(
     .clk,
     .addr(char_address_2),
     .char_line_pixels(char_pixels_2)
-);
-
-check_sudoku_incorrect u_check_sudoku_incorrect(
-    .board,
-    .incorrect,
-    .board_size
 );
 
 endmodule
