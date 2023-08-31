@@ -6,7 +6,8 @@ module game_board_draw (
     input  logic is_game_on,
     input  logic[2:0] board_size,
     vga_bus bus_in,
-    vga_bus bus_out
+    vga_bus bus_out,
+    input logic incorrect
 );
 
 /**
@@ -15,6 +16,7 @@ module game_board_draw (
 localparam  SCREEN_HEIGHT = 768,
 			SCREEN_WIDTH = 1024,
 			FONT_COLOR = 12'h7_7_7,
+			FONT_COLOR_INCORRECT = 12'hf_7_7,
             CHAR_WIDTH = 16,
             CHAR_HEIGHT = 16;
 logic [9:0] RECT_CHAR_X, RECT_CHAR_Y, RECT_CHAR_WIDTH, RECT_CHAR_HEIGHT;
@@ -60,7 +62,11 @@ end
 
 always_comb begin
     if(is_game_on && in_horizontal_range && in_vertical_range && (is_pixel_active_horizontally || is_pixel_active_vertically)) begin
-        rgb_out_nxt = FONT_COLOR;
+        if(incorrect) begin
+            rgb_out_nxt = FONT_COLOR_INCORRECT;
+        end else begin
+            rgb_out_nxt = FONT_COLOR;
+        end
     end else begin
         rgb_out_nxt = bus_in.rgb;
     end

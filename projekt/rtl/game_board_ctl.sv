@@ -30,14 +30,14 @@ always_ff @(posedge clk) begin
     if(rst) begin
         for (int i = 0; i < 16; i++) begin
             for (int j = 0; j < 16; j++) begin
-                board[i][j] <= 5'b11; 
+                board[i][j] <= 5'b0 + (i&1) ; 
             end
         end
         debounce_reg <= 0;
         selection_x <= 0;
         selection_y <= 0;
     end else begin
-        board = board_nxt;
+        board <= board_nxt;
         debounce_reg <= debounce_reg_nxt;
         selection_x <= selection_x_nxt;
         selection_y <= selection_y_nxt;
@@ -46,8 +46,23 @@ end
 
 always_comb begin
     if(is_game_on) begin
-        if(top && debounce_reg == 0) begin
+        if(mouse_left && debounce_reg == 0) begin
             debounce_reg_nxt = 20000000;
+            selection_x_nxt = selection_x;
+            selection_y_nxt = selection_y;
+            board_nxt = board;
+            if((board[selection_y][selection_x]&1'b1) == 0) begin
+                if((board[selection_y][selection_x]>>1) < 9 ) begin
+                    board_nxt[selection_y][selection_x] = board[selection_y][selection_x] + 2;
+                end else begin
+                    board_nxt[selection_y][selection_x] = 0;
+                end
+            end else begin
+                board_nxt[selection_y][selection_x] = board[selection_y][selection_x];
+            end
+        end else if(top && debounce_reg == 0) begin
+            debounce_reg_nxt = 20000000;
+            board_nxt = board;
             if(selection_y > 0 ) begin
                 selection_y_nxt = selection_y - 1;
             end else begin
@@ -56,6 +71,7 @@ always_comb begin
             selection_x_nxt = selection_x;
         end else if(bottom && debounce_reg == 0) begin
             debounce_reg_nxt = 20000000;
+            board_nxt = board;
             if(selection_y < (board_size_squared - 1) ) begin
                 selection_y_nxt = selection_y + 1;
             end else begin
@@ -64,6 +80,7 @@ always_comb begin
             selection_x_nxt = selection_x;
         end else if(left && debounce_reg == 0) begin
             debounce_reg_nxt = 20000000;
+            board_nxt = board;
             if(selection_x > 0) begin
                 selection_x_nxt = selection_x - 1;
             end else begin
@@ -72,6 +89,7 @@ always_comb begin
             selection_y_nxt = selection_y;
         end else if(right && debounce_reg == 0) begin
             debounce_reg_nxt = 20000000;
+            board_nxt = board;
             if(selection_x < (board_size_squared - 1) ) begin
                 selection_x_nxt = selection_x + 1;
             end else begin
@@ -79,6 +97,7 @@ always_comb begin
             end
             selection_y_nxt = selection_y;
         end else begin
+            board_nxt = board;
             if(debounce_reg>0) begin
                 debounce_reg_nxt = debounce_reg - 1;
             end else begin
@@ -87,9 +106,8 @@ always_comb begin
             selection_x_nxt = selection_x;
             selection_y_nxt = selection_y;
         end
-        board_nxt = board;
     end else begin
-        debounce_reg_nxt = debounce_reg;
+        debounce_reg_nxt = 20000000;
         selection_x_nxt = selection_x;
         selection_y_nxt = selection_y;
         board_nxt = board;

@@ -155,11 +155,13 @@ game_board_draw u_game_board_draw(
     .is_game_on,
     .board_size,
     .bus_in(bus_board.IN),
-    .bus_out(bus_board_numbers.OUT)
+    .bus_out(bus_board_numbers.OUT),
+    .incorrect
 );
 
 logic[15:0] char_pixels_2;
 logic [10:0] char_address_2;
+logic incorrect;
 
 game_board_numbers_draw u_game_board_numbers_draw(
     .clk,
@@ -179,6 +181,12 @@ font_rom_numerical u2_font_rom_numerical(
     .clk,
     .addr(char_address_2),
     .char_line_pixels(char_pixels_2)
+);
+
+check_sudoku_incorrect u_check_sudoku_incorrect(
+    .board,
+    .incorrect,
+    .board_size
 );
 
 endmodule
