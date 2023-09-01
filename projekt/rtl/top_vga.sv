@@ -43,6 +43,8 @@ wire vblnk_tim, hblnk_tim;
 // VGA signals from background
 vga_bus bus_bg();
 
+vga_bus bus_menu();
+vga_bus bus_num();
 vga_bus bus_board();
 vga_bus bus_board_numbers();
 
@@ -84,13 +86,14 @@ draw_bg u_draw_bg (
     .bus_out    (bus_bg.OUT)
 );
 
-logic mouse_left;
+logic mouse_left, mouse_right;
 logic [11:0] mouse_x_position, mouse_y_position, rect_x_position, rect_y_position;
 
 MouseCtl mouse_ctl(
     .clk(clk),
     .rst,
     .left(mouse_left),
+    .right(mouse_right),
     .xpos(mouse_x_position),
     .ypos(mouse_y_position),
     .ps2_clk(ps2_clk),
@@ -98,6 +101,7 @@ MouseCtl mouse_ctl(
 );
 
 logic[2:0] board_size;
+logic[2:0] lvl;
 logic is_game_on;
 
 game_menu u_game_menu(
@@ -105,8 +109,11 @@ game_menu u_game_menu(
     .rst,
     .top,
     .bottom,
+    .left,
+    .right,
     .mouse_left,
     .board_size,
+    .lvl,
     .is_game_on
 );
 
@@ -115,29 +122,73 @@ logic [10:0] char_address;
 
 logic[15:0] char_pixels_2;
 logic [10:0] char_address_2;
-logic incorrect;
-assign incorrect = 0;
 
-draw_single_num u_draw_single_num(
+logic[15:0] char_pixels_3;
+logic [10:0] char_address_3;
+
+logic incorrect;
+logic[1:0] seed;
+assign seed = mouse_x_position % 3;
+
+draw_menu u_draw_menu(
     .clk,
     .rst,
     .is_game_on,
-    .board_size,
 
     .bus_in(bus_bg.IN),
-    .bus_out(bus_board.OUT),
+    .bus_out(bus_menu.OUT)
+);
+
+draw_single_num u_draw_single_num_size(
+    .clk,
+    .rst,
+    .is_game_on,
+    .number(board_size),
+
+    .bus_in(bus_menu.IN),
+    .bus_out(bus_num.OUT),
     .char_pixels,
     .address(char_address)
 );
 
-font_rom_numerical u_font_rom_numerical(
+font_rom_numerical u_font_rom_numerical_size(
     .clk,
     .addr(char_address),
     .char_line_pixels(char_pixels)
 );
 
+
+draw_single_num #(504, 392) u_draw_single_num_lvl (
+    .clk,
+    .rst,
+    .is_game_on,
+    .number(lvl),
+
+    .bus_in(bus_num.IN),
+    .bus_out(bus_board.OUT),
+    .char_pixels(char_pixels_3),
+    .address(char_address_3)
+);
+
+font_rom_numerical u_font_rom_numerical_lvl(
+    .clk,
+    .addr(char_address_3),
+    .char_line_pixels(char_pixels_3)
+);
+
 logic [5:0] board [15:0][15:0];
+logic [5:0] selected_board [15:0][15:0];
+logic [5:0] selected_board_complete [15:0][15:0];
 logic [3:0] selection_x, selection_y;
+
+game_board_select u_game_board_select(
+    .clk,
+    .board_size,
+    .lvl,
+    .seed,
+    .selected_board,
+    .selected_board_complete
+);
 
 game_board_ctl u_game_board_ctl(
     .clk,
@@ -147,11 +198,15 @@ game_board_ctl u_game_board_ctl(
     .left,
     .right,
     .mouse_left,
+    .mouse_right,
     .is_game_on,
     .board_size,
+    .selected_board,
+    .selected_board_complete,
     .board,
     .selection_x,
-    .selection_y
+    .selection_y,
+    .incorrect
 );
 
 game_board_draw u_game_board_draw(

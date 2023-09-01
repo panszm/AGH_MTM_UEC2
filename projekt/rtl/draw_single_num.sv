@@ -1,24 +1,20 @@
 `timescale 1 ns / 1 ps
 
-module draw_single_num (
-    input logic clk,
-    input logic rst,
-    input logic is_game_on,
-    input logic[2:0] board_size,
+module draw_single_num #(parameter RECT_CHAR_X = 504, parameter RECT_CHAR_Y = 376) (
+                           input logic clk,
+                           input logic rst,
+                           input logic is_game_on,
+                           input logic[2:0] number,
 
-    vga_bus bus_in,
-    vga_bus bus_out,
-    input logic [15:0] char_pixels,
-    output logic [10:0] address
-);
+                           vga_bus bus_in,
+                           vga_bus bus_out,
+                           input logic [15:0] char_pixels,
+                           output logic [10:0] address
+                        );
 
 import vga_pkg::*;
 
-localparam  SCREEN_HEIGHT = 768,
-			SCREEN_WIDTH = 1024,
-			FONT_COLOR = 12'hf_f_f,
-            RECT_CHAR_X = 504,
-            RECT_CHAR_Y = 376,
+localparam 	FONT_COLOR = 12'hf_f_f,
             RECT_CHAR_WIDTH = 16,
             RECT_CHAR_HEIGHT = 16;
 			
@@ -52,5 +48,5 @@ always_comb begin
 	end;
 end;
 
-assign address = (board_size + 1) *16 + bus_in.vcount - RECT_CHAR_Y;
+assign address = (number + 1) *16 + bus_in.vcount - RECT_CHAR_Y;
 endmodule

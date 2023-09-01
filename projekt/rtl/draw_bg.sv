@@ -59,45 +59,47 @@ always_ff @(posedge clk) begin : bg_ff_blk
 end
 
 always_comb begin : bg_comb_blk
-    if (vblnk_in || hblnk_in) begin             // Blanking region:
-        rgb_nxt = 12'h0_0_0;                    // - make it it black.
-    end else begin                              // Active region:
-      //signature 21 pixs for WŚ
-        if(vcount_in == 0 && hcount_in == 11) rgb_nxt = 12'hf_f_f;
-        else if(vcount_in == 1 && hcount_in == 10) rgb_nxt = 12'hf_f_f;
-        else if(vcount_in == 1 && hcount_in == 11) rgb_nxt = 12'hf_f_f;
-        else if(vcount_in == 1 && hcount_in == 12) rgb_nxt = 12'hf_f_f;
-        else if(vcount_in == 2 && hcount_in == 10) rgb_nxt = 12'hf_f_f;
-        else if(vcount_in == 3 && hcount_in == 10) rgb_nxt = 12'hf_f_f;
-        else if(vcount_in == 3 && hcount_in == 11) rgb_nxt = 12'hf_f_f;
-        else if(vcount_in == 3 && hcount_in == 12) rgb_nxt = 12'hf_f_f;
-        else if(vcount_in == 4 && hcount_in == 12) rgb_nxt = 12'hf_f_f;
-        else if(vcount_in == 5 && hcount_in == 10) rgb_nxt = 12'hf_f_f;
-        else if(vcount_in == 5 && hcount_in == 11) rgb_nxt = 12'hf_f_f;
-        else if(vcount_in == 5 && hcount_in == 12) rgb_nxt = 12'hf_f_f;
+    if (vblnk_in || hblnk_in) begin         
+        rgb_nxt = 12'h0_0_0;         
+    end else begin                      
+        if(vcount_in>>3 == 6 && (hcount_in>>3 == 53 || hcount_in>>3 == 54 || hcount_in>>3 == 55)) rgb_nxt = 12'h4_4_4;
+        else if(vcount_in>>3 == 7  && (hcount_in>>3 == 53)) rgb_nxt = 12'h4_4_4;
+        else if(vcount_in>>3 == 8 && (hcount_in>>3 == 53 || hcount_in>>3 == 54 || hcount_in>>3 == 55)) rgb_nxt = 12'h4_4_4;
+        else if(vcount_in>>3 == 9 && (hcount_in>>3 == 55)) rgb_nxt = 12'h4_4_4;
+        else if(vcount_in>>3 == 10 && (hcount_in>>3 == 53 || hcount_in>>3 == 54 || hcount_in>>3 == 55)) rgb_nxt = 12'h4_4_4;
 
-        else if(vcount_in == 1 && hcount_in == 4) rgb_nxt = 12'hf_f_f;
-        else if(vcount_in == 2 && hcount_in == 4) rgb_nxt = 12'hf_f_f;
-        else if(vcount_in == 0 && hcount_in == 4) rgb_nxt = 12'hf_f_f;
-        else if(vcount_in == 3 && hcount_in == 4) rgb_nxt = 12'hf_f_f;
-        else if(vcount_in == 4 && hcount_in == 4) rgb_nxt = 12'hf_f_f;
-        else if(vcount_in == 5 && hcount_in == 4) rgb_nxt = 12'hf_f_f;
+        else if(vcount_in>>3 == 6 && (hcount_in>>3 == 57 || hcount_in>>3 == 59)) rgb_nxt = 12'h4_4_4;
+        else if(vcount_in>>3 == 7 && (hcount_in>>3 == 57 || hcount_in>>3 == 59)) rgb_nxt = 12'h4_4_4;
+        else if(vcount_in>>3 == 8 && (hcount_in>>3 == 57 || hcount_in>>3 == 59)) rgb_nxt = 12'h4_4_4;
+        else if(vcount_in>>3 == 9 && (hcount_in>>3 == 57 || hcount_in>>3 == 59)) rgb_nxt = 12'h4_4_4;
+        else if(vcount_in>>3 == 10 && (hcount_in>>3 == 57 || hcount_in>>3 == 58 || hcount_in>>3 == 59)) rgb_nxt = 12'h4_4_4;
 
-        else if(vcount_in == 4 && hcount_in == 5) rgb_nxt = 12'hf_f_f;
-        
-        else if(vcount_in == 2 && hcount_in == 6) rgb_nxt = 12'hf_f_f;
-        else if(vcount_in == 3 && hcount_in == 6) rgb_nxt = 12'hf_f_f;
+        else if(vcount_in>>3 == 6 && (hcount_in>>3 == 61 || hcount_in>>3 == 62)) rgb_nxt = 12'h4_4_4;
+        else if(vcount_in>>3 == 7 && (hcount_in>>3 == 61 || hcount_in>>3 == 63)) rgb_nxt = 12'h4_4_4;
+        else if(vcount_in>>3 == 8 && (hcount_in>>3 == 61 || hcount_in>>3 == 63)) rgb_nxt = 12'h4_4_4;
+        else if(vcount_in>>3 == 9 && (hcount_in>>3 == 61 || hcount_in>>3 == 63)) rgb_nxt = 12'h4_4_4;
+        else if(vcount_in>>3 == 10 && (hcount_in>>3 == 61 || hcount_in>>3 == 62)) rgb_nxt = 12'h4_4_4;
 
-        else if(vcount_in == 4 && hcount_in == 7) rgb_nxt = 12'hf_f_f;
+        else if(vcount_in>>3 == 6 && (hcount_in>>3 == 65 || hcount_in>>3 == 66 || hcount_in>>3 == 67)) rgb_nxt = 12'h4_4_4;
+        else if(vcount_in>>3 == 7 && (hcount_in>>3 == 65 || hcount_in>>3 == 67)) rgb_nxt = 12'h4_4_4;
+        else if(vcount_in>>3 == 8 && (hcount_in>>3 == 65 || hcount_in>>3 == 67)) rgb_nxt = 12'h4_4_4;
+        else if(vcount_in>>3 == 9 && (hcount_in>>3 == 65 || hcount_in>>3 == 67)) rgb_nxt = 12'h4_4_4;
+        else if(vcount_in>>3 == 10 && (hcount_in>>3 == 65 || hcount_in>>3 == 66 || hcount_in>>3 == 67)) rgb_nxt = 12'h4_4_4;
 
-        else if(vcount_in == 1 && hcount_in == 8) rgb_nxt = 12'hf_f_f;
-        else if(vcount_in == 2 && hcount_in == 8) rgb_nxt = 12'hf_f_f;
-        else if(vcount_in == 0 && hcount_in == 8) rgb_nxt = 12'hf_f_f;
-        else if(vcount_in == 3 && hcount_in == 8) rgb_nxt = 12'hf_f_f;
-        else if(vcount_in == 4 && hcount_in == 8) rgb_nxt = 12'hf_f_f;
-        else if(vcount_in == 5 && hcount_in == 8) rgb_nxt = 12'hf_f_f;
-        else                                    // The rest of active display pixels:
-            rgb_nxt = 12'h2_2_2;                // - fill with dark_gray.
+        else if(vcount_in>>3 == 6 && (hcount_in>>3 == 69 || hcount_in>>3 == 71)) rgb_nxt = 12'h4_4_4;
+        else if(vcount_in>>3 == 7 && (hcount_in>>3 == 69 || hcount_in>>3 == 71)) rgb_nxt = 12'h4_4_4;
+        else if(vcount_in>>3 == 8 && (hcount_in>>3 == 69 || hcount_in>>3 == 70)) rgb_nxt = 12'h4_4_4;
+        else if(vcount_in>>3 == 9 && (hcount_in>>3 == 69 || hcount_in>>3 == 71)) rgb_nxt = 12'h4_4_4;
+        else if(vcount_in>>3 == 10 && (hcount_in>>3 == 69 || hcount_in>>3 == 71)) rgb_nxt = 12'h4_4_4;
+
+        else if(vcount_in>>3 == 6 && (hcount_in>>3 == 73 || hcount_in>>3 == 75)) rgb_nxt = 12'h4_4_4;
+        else if(vcount_in>>3 == 7 && (hcount_in>>3 == 73 || hcount_in>>3 == 75)) rgb_nxt = 12'h4_4_4;
+        else if(vcount_in>>3 == 8 && (hcount_in>>3 == 73 || hcount_in>>3 == 75)) rgb_nxt = 12'h4_4_4;
+        else if(vcount_in>>3 == 9 && (hcount_in>>3 == 73 || hcount_in>>3 == 75)) rgb_nxt = 12'h4_4_4;
+        else if(vcount_in>>3 == 10 && (hcount_in>>3 == 73 || hcount_in>>3 == 74 || hcount_in>>3 == 75)) rgb_nxt = 12'h4_4_4;
+
+
+        else rgb_nxt = 12'h2_2_2;
     end
 end
 

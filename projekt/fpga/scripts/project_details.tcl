@@ -45,6 +45,8 @@ set sv_files {
     ../rtl/game_board_draw.sv
     ../rtl/game_board_numbers_draw.sv
     ../rtl/font_rom_numerical.sv
+    ../rtl/draw_menu.sv
+    ../rtl/game_board_select.sv
 }
 
 # Specify Verilog design files location         -- EDIT
