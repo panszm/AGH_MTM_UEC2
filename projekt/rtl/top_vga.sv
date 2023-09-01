@@ -86,7 +86,7 @@ draw_bg u_draw_bg (
     .bus_out    (bus_bg.OUT)
 );
 
-logic mouse_left, mouse_right;
+logic mouse_left, mouse_right, mouse_middle;
 logic [11:0] mouse_x_position, mouse_y_position, rect_x_position, rect_y_position;
 
 MouseCtl mouse_ctl(
@@ -94,6 +94,7 @@ MouseCtl mouse_ctl(
     .rst,
     .left(mouse_left),
     .right(mouse_right),
+    .middle(mouse_middle),
     .xpos(mouse_x_position),
     .ypos(mouse_y_position),
     .ps2_clk(ps2_clk),
@@ -126,7 +127,7 @@ logic [10:0] char_address_2;
 logic[15:0] char_pixels_3;
 logic [10:0] char_address_3;
 
-logic incorrect;
+logic incorrect, victory;
 logic[1:0] seed;
 assign seed = mouse_x_position % 3;
 
@@ -183,6 +184,7 @@ logic [3:0] selection_x, selection_y;
 
 game_board_select u_game_board_select(
     .clk,
+    .rst,
     .board_size,
     .lvl,
     .seed,
@@ -206,7 +208,8 @@ game_board_ctl u_game_board_ctl(
     .board,
     .selection_x,
     .selection_y,
-    .incorrect
+    .incorrect,
+    .victory
 );
 
 game_board_draw u_game_board_draw(
@@ -216,7 +219,8 @@ game_board_draw u_game_board_draw(
     .board_size,
     .bus_in(bus_board.IN),
     .bus_out(bus_board_numbers.OUT),
-    .incorrect
+    .incorrect,
+    .victory
 );
 
 game_board_numbers_draw u_game_board_numbers_draw(

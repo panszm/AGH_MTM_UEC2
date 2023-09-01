@@ -56,7 +56,7 @@ always_ff @(posedge clk) begin
 end
 
 always_comb begin
-    if(is_game_on) begin
+    if(is_game_on && !victory) begin
         if(mouse_left && debounce_reg == 0) begin
             debounce_reg_nxt = 20000000;
             selection_x_nxt = selection_x;
@@ -65,7 +65,7 @@ always_comb begin
             incorrect_nxt = incorrect;
             victory_nxt = victory;
             if((board[selection_y][selection_x]&1'b1) == 0) begin
-                if((board[selection_y][selection_x]>>1) < 9 ) begin
+                if((board[selection_y][selection_x]>>1) < (board_size * board_size) ) begin
                     board_nxt[selection_y][selection_x] = board[selection_y][selection_x] + 2;
                 end else begin
                     board_nxt[selection_y][selection_x] = 0;
@@ -147,7 +147,11 @@ always_comb begin
         debounce_reg_nxt = 20000000;
         selection_x_nxt = selection_x;
         selection_y_nxt = selection_y;
-        board_nxt = selected_board;
+        if (victory) begin 
+            board_nxt = board;
+        end else begin
+            board_nxt = selected_board;
+        end
         incorrect_nxt = incorrect;
     end
 end
