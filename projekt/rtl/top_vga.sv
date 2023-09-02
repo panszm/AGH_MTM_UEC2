@@ -35,12 +35,34 @@ module top_vga (
  * Local variables and signals
  */
 
-// VGA signals from timing
 wire [10:0] vcount_tim, hcount_tim;
 wire vsync_tim, hsync_tim;
 wire vblnk_tim, hblnk_tim;
 
-// VGA signals from background
+logic mouse_left, mouse_right, mouse_middle;
+logic [11:0] mouse_x_position, mouse_y_position, rect_x_position, rect_y_position;
+logic[2:0] board_size;
+logic[2:0] lvl;
+logic is_game_on;
+
+logic[15:0] char_pixels;
+logic [10:0] char_address;
+
+logic[15:0] char_pixels_2;
+logic [10:0] char_address_2;
+
+logic[15:0] char_pixels_3;
+logic [10:0] char_address_3;
+
+logic incorrect, victory;
+logic[1:0] seed;
+
+logic [5:0] board [15:0][15:0];
+logic [5:0] selected_board [15:0][15:0];
+logic [5:0] selected_board_complete [15:0][15:0];
+logic [3:0] selection_x, selection_y;
+logic victory_rst;
+
 vga_bus bus_bg();
 
 vga_bus bus_menu();
@@ -49,6 +71,7 @@ vga_bus bus_board();
 vga_bus bus_board_numbers();
 
 vga_bus bus_out();
+
 /**
  * Signals assignments
  */
@@ -56,6 +79,9 @@ vga_bus bus_out();
 assign vs = bus_out.vsync;
 assign hs = bus_out.hsync;
 assign {r,g,b} = bus_out.rgb;
+
+assign seed = mouse_x_position % 3;
+assign rst_comb = rst || victory_rst;
 
 /**
  * Submodules instances
@@ -86,8 +112,6 @@ draw_bg u_draw_bg (
     .bus_out    (bus_bg.OUT)
 );
 
-logic mouse_left, mouse_right, mouse_middle;
-logic [11:0] mouse_x_position, mouse_y_position, rect_x_position, rect_y_position;
 
 MouseCtl mouse_ctl(
     .clk(clk),
@@ -101,9 +125,6 @@ MouseCtl mouse_ctl(
     .ps2_data(ps2_data)
 );
 
-logic[2:0] board_size;
-logic[2:0] lvl;
-logic is_game_on;
 
 game_menu u_game_menu(
     .clk,
@@ -117,20 +138,6 @@ game_menu u_game_menu(
     .lvl,
     .is_game_on
 );
-
-logic[15:0] char_pixels;
-logic [10:0] char_address;
-
-logic[15:0] char_pixels_2;
-logic [10:0] char_address_2;
-
-logic[15:0] char_pixels_3;
-logic [10:0] char_address_3;
-
-logic incorrect, victory;
-logic[1:0] seed;
-assign seed = mouse_x_position % 3;
-assign rst_comb = rst || victory_rst;
 
 draw_menu u_draw_menu(
     .clk,
@@ -177,12 +184,6 @@ font_rom_numerical u_font_rom_numerical_lvl(
     .addr(char_address_3),
     .char_line_pixels(char_pixels_3)
 );
-
-logic [5:0] board [15:0][15:0];
-logic [5:0] selected_board [15:0][15:0];
-logic [5:0] selected_board_complete [15:0][15:0];
-logic [3:0] selection_x, selection_y;
-logic victory_rst;
 
 game_board_select u_game_board_select(
     .clk,
