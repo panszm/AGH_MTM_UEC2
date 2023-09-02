@@ -76,12 +76,12 @@ always_comb begin
         end else if(mouse_right && debounce_reg == 0) begin
             debounce_reg_nxt = 20000000;
             board_nxt = board;
-            if(board != selected_board_complete) begin
-                incorrect_nxt = 1;
-                victory_nxt = victory;
-            end else begin
+            if(board == selected_board_complete) begin
                 incorrect_nxt = incorrect;
                 victory_nxt = 1;
+            end else begin
+                incorrect_nxt = 1;
+                victory_nxt = victory;
             end
             selection_x_nxt = selection_x;
             selection_y_nxt = selection_y;
@@ -149,10 +149,11 @@ always_comb begin
         selection_y_nxt = selection_y;
         if (victory) begin 
             board_nxt = board;
+            incorrect_nxt = 0;
         end else begin
             board_nxt = selected_board;
+            incorrect_nxt = incorrect;
         end
-        incorrect_nxt = incorrect;
     end
 end
 
