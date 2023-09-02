@@ -107,7 +107,7 @@ logic is_game_on;
 
 game_menu u_game_menu(
     .clk,
-    .rst,
+    .rst(rst_comb),
     .top,
     .bottom,
     .left,
@@ -130,10 +130,11 @@ logic [10:0] char_address_3;
 logic incorrect, victory;
 logic[1:0] seed;
 assign seed = mouse_x_position % 3;
+assign rst_comb = rst || victory_rst;
 
 draw_menu u_draw_menu(
     .clk,
-    .rst,
+    .rst(rst_comb),
     .is_game_on,
 
     .bus_in(bus_bg.IN),
@@ -142,7 +143,7 @@ draw_menu u_draw_menu(
 
 draw_single_num u_draw_single_num_size(
     .clk,
-    .rst,
+    .rst(rst_comb),
     .is_game_on,
     .number(board_size),
 
@@ -161,7 +162,7 @@ font_rom_numerical u_font_rom_numerical_size(
 
 draw_single_num #(504, 392) u_draw_single_num_lvl (
     .clk,
-    .rst,
+    .rst(rst_comb),
     .is_game_on,
     .number(lvl),
 
@@ -181,11 +182,13 @@ logic [5:0] board [15:0][15:0];
 logic [5:0] selected_board [15:0][15:0];
 logic [5:0] selected_board_complete [15:0][15:0];
 logic [3:0] selection_x, selection_y;
+logic victory_rst;
 
 game_board_select u_game_board_select(
     .clk,
-    .rst,
+    .rst(rst_comb),
     .board_size,
+    .is_game_on,
     .lvl,
     .seed,
     .selected_board,
@@ -194,7 +197,7 @@ game_board_select u_game_board_select(
 
 game_board_ctl u_game_board_ctl(
     .clk,
-    .rst,
+    .rst(rst_comb),
     .top,
     .bottom,
     .left,
@@ -209,12 +212,13 @@ game_board_ctl u_game_board_ctl(
     .selection_x,
     .selection_y,
     .incorrect,
-    .victory
+    .victory,
+    .victory_rst
 );
 
 game_board_draw u_game_board_draw(
     .clk,
-    .rst,
+    .rst(rst_comb),
     .is_game_on,
     .board_size,
     .bus_in(bus_board.IN),
@@ -225,7 +229,7 @@ game_board_draw u_game_board_draw(
 
 game_board_numbers_draw u_game_board_numbers_draw(
     .clk,
-    .rst,
+    .rst(rst_comb),
     .is_game_on,
     .board_size,
     .board,
