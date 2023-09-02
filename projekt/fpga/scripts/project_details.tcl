@@ -32,20 +32,19 @@ set xdc_files {
 
 # Specify SystemVerilog design files location   -- EDIT
 set sv_files {
+    rtl/top_vga_basys3.sv
     ../rtl/vga_pkg.sv
     ../rtl/vga_if.sv
     ../rtl/vga_timing.sv
     ../rtl/draw_bg.sv
-    ../rtl/draw_rect_char.sv
     ../rtl/top_vga.sv
-    rtl/top_vga_basys3.sv
-    ../rtl/game_menu.sv
-    ../rtl/draw_single_num.sv
+    ../rtl/game_menu_ctl.sv
+    ../rtl/draw_single_number.sv
     ../rtl/game_board_ctl.sv
     ../rtl/game_board_draw.sv
     ../rtl/game_board_numbers_draw.sv
     ../rtl/font_rom_numerical.sv
-    ../rtl/draw_menu.sv
+    ../rtl/game_menu_draw.sv
     ../rtl/game_board_select.sv
 }
 
@@ -53,8 +52,6 @@ set sv_files {
 set verilog_files {
     ../rtl/clk_wiz_0_clk_wiz.v
     ../rtl/clk_wiz_0.v
-    ../rtl/font_rom.v
-    ../rtl/delay.v
 }
 
 # Specify VHDL design files location            -- EDIT

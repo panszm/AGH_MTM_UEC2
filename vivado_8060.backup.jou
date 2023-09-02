@@ -1,0 +1,13 @@
+#-----------------------------------------------------------
+# Vivado v2021.2 (64-bit)
+# SW Build 3367213 on Tue Oct 19 02:48:09 MDT 2021
+# IP Build 3369179 on Thu Oct 21 08:25:16 MDT 2021
+# Start of session at: Thu Aug 31 15:25:42 2023
+# Process ID: 8060
+# Current directory: D:/Studia/UEC2/AGH_MTM_UEC2
+# Command line: vivado.exe -mode tcl -source scripts/generate_bitstream.tcl
+# Log file: D:/Studia/UEC2/AGH_MTM_UEC2/vivado.log
+# Journal file: D:/Studia/UEC2/AGH_MTM_UEC2\vivado.jou
+# Running On: DESKTOP-3KEGUTQ, OS: Windows, CPU Frequency: 3793 MHz, CPU Physical cores: 16, Host memory: 34301 MB
+#-----------------------------------------------------------
+source scripts/generate_bitstream.tcl

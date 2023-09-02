@@ -1,24 +1,36 @@
+/**
+ * Copyright (C) 2023  AGH University of Science and Technology
+ * MTM UEC2
+ * Author: Waldemar Świder
+ *
+ * Description:
+ * Logic for gameboard, and in-game ui control of the gameboard.
+ */
 `timescale 1 ns / 1 ps
 
 module game_board_ctl (
-    input  logic clk,
-    input  logic rst,
-    input  logic top,
-    input  logic bottom,
-    input  logic left,
-    input  logic right,
-    input  logic mouse_left,
-    input  logic mouse_right,
-    input  logic is_game_on,
-    input  logic[2:0] board_size,
-    input logic [5:0] selected_board [15:0][15:0],
-    input logic [5:0] selected_board_complete [15:0][15:0],
-    output logic [5:0] board [15:0][15:0],
-    output logic[3:0] selection_x,
-    output logic[3:0] selection_y,
-    output logic incorrect,
-    output logic victory,
-    output logic victory_rst
+    //global signals
+    input  logic        clk,
+    input  logic        rst,
+    //ui signals
+    input  logic        top,
+    input  logic        bottom,
+    input  logic        left,
+    input  logic        right,
+    input  logic        mouse_left,
+    input  logic        mouse_right,
+    //game related signals
+    input  logic        is_game_on,
+    input  logic[2:0]   board_size,
+    input  logic [5:0]  selected_board [15:0][15:0],
+    input  logic [5:0]  selected_board_complete [15:0][15:0],
+    //outputs
+    output logic [5:0]  board [15:0][15:0],
+    output logic[3:0]   selection_x,
+    output logic[3:0]   selection_y,
+    output logic        incorrect,
+    output logic        victory,
+    output logic        victory_rst
 );
 
 /**
@@ -33,8 +45,12 @@ logic [4:0] board_size_squared;
 logic incorrect_nxt;
 logic victory_nxt;
 logic victory_rst_nxt = 0;
+
 assign board_size_squared = board_size * board_size;
 
+/**
+ * Internal logic
+ */
 always_ff @(posedge clk) begin
     if(rst) begin
         for (int i = 0; i < 16; i++) begin
@@ -63,10 +79,10 @@ always_comb begin
     if(is_game_on && !victory) begin
         victory_rst_nxt = victory_rst;
         if(mouse_left && debounce_reg == 0) begin
+            board_nxt = board;
             debounce_reg_nxt = 20000000;
             selection_x_nxt = selection_x;
             selection_y_nxt = selection_y;
-            board_nxt = board;
             incorrect_nxt = incorrect;
             victory_nxt = victory;
             if((board[selection_y][selection_x]&1'b1) == 0) begin
@@ -80,6 +96,8 @@ always_comb begin
             end
         end else if(mouse_right && debounce_reg == 0) begin
             board_nxt = board;
+            selection_x_nxt = selection_x;
+            selection_y_nxt = selection_y;
             if(board == selected_board_complete) begin
                 debounce_reg_nxt = 80000000;
                 incorrect_nxt = incorrect;
@@ -89,54 +107,54 @@ always_comb begin
                 incorrect_nxt = 1;
                 victory_nxt = victory;
             end
-            selection_x_nxt = selection_x;
-            selection_y_nxt = selection_y;
         end else if(top && debounce_reg == 0) begin
-            debounce_reg_nxt = 20000000;
             board_nxt = board;
+            debounce_reg_nxt = 20000000;
+            selection_x_nxt = selection_x;
+            incorrect_nxt = incorrect;
             victory_nxt = victory;
             if(selection_y > 0 ) begin
                 selection_y_nxt = selection_y - 1;
             end else begin
                 selection_y_nxt = 0;
             end
+        end else if(bottom && debounce_reg == 0) begin
+            board_nxt = board;
+            debounce_reg_nxt = 20000000;
             selection_x_nxt = selection_x;
             incorrect_nxt = incorrect;
-        end else if(bottom && debounce_reg == 0) begin
-            debounce_reg_nxt = 20000000;
-            board_nxt = board;
             victory_nxt = victory;
             if(selection_y < (board_size_squared - 1) ) begin
                 selection_y_nxt = selection_y + 1;
             end else begin
                 selection_y_nxt = (board_size_squared - 1);
             end
-            selection_x_nxt = selection_x;
-            incorrect_nxt = incorrect;
         end else if(left && debounce_reg == 0) begin
-            debounce_reg_nxt = 20000000;
             board_nxt = board;
+            debounce_reg_nxt = 20000000;
+            selection_y_nxt = selection_y;
+            incorrect_nxt = incorrect;
             victory_nxt = victory;
             if(selection_x > 0) begin
                 selection_x_nxt = selection_x - 1;
             end else begin
                 selection_x_nxt = 0;
             end
+        end else if(right && debounce_reg == 0) begin
+            board_nxt = board;
+            debounce_reg_nxt = 20000000;
             selection_y_nxt = selection_y;
             incorrect_nxt = incorrect;
-        end else if(right && debounce_reg == 0) begin
-            debounce_reg_nxt = 20000000;
-            board_nxt = board;
             victory_nxt = victory;
             if(selection_x < (board_size_squared - 1) ) begin
                 selection_x_nxt = selection_x + 1;
             end else begin
                 selection_x_nxt = (board_size_squared - 1);
             end
-            selection_y_nxt = selection_y;
-            incorrect_nxt = incorrect;
         end else begin
             board_nxt = board;
+            selection_x_nxt = selection_x;
+            selection_y_nxt = selection_y;
             victory_nxt = victory;
             if(debounce_reg>0) begin
                 debounce_reg_nxt = debounce_reg - 1;
@@ -145,10 +163,10 @@ always_comb begin
                 debounce_reg_nxt = debounce_reg;
                 incorrect_nxt = 0;
             end
-            selection_x_nxt = selection_x;
-            selection_y_nxt = selection_y;
         end
     end else begin
+        selection_x_nxt = selection_x;
+        selection_y_nxt = selection_y;
         victory_nxt = victory;
         if(!is_game_on) begin
             debounce_reg_nxt = 20000000;
@@ -162,8 +180,6 @@ always_comb begin
                 victory_rst_nxt = 1;
             end
         end
-        selection_x_nxt = selection_x;
-        selection_y_nxt = selection_y;
         if (victory) begin 
             board_nxt = board;
             incorrect_nxt = 0;

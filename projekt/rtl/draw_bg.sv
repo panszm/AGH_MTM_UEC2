@@ -2,6 +2,7 @@
  * Copyright (C) 2023  AGH University of Science and Technology
  * MTM UEC2
  * Author: Piotr Kaczmarczyk
+ * Updated by: Waldemar Świder
  *
  * Description:
  * Draw background.
@@ -23,8 +24,6 @@ module draw_bg (
 
     vga_bus bus_out
 );
-
-import vga_pkg::*;
 
 
 /**

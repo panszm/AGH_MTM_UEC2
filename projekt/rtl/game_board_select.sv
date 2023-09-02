@@ -1,41 +1,57 @@
+/**
+ * Copyright (C) 2023  AGH University of Science and Technology
+ * MTM UEC2
+ * Author: Waldemar Świder
+ *
+ * Description:
+ * Selection of board and its solutions.
+ */
 `timescale 1ns / 1ps
 
-module game_board_select
-    (   
-        input logic clk,
-        input logic rst,
-        input logic[2:0] board_size,
-        input logic[2:0] lvl,
-        input logic[1:0] seed,
-        input logic is_game_on,
-        output logic[5:0] selected_board [15:0][15:0],
-        output logic[5:0] selected_board_complete [15:0][15:0]
-    );
+module game_board_select (   
+    input   logic         clk,
+    input   logic         rst,
+    
+    input   logic[2:0]    board_size,
+    input   logic[2:0]    lvl,
+    input   logic[1:0]    seed,
+    input   logic         is_game_on,
 
+    output  logic[5:0]   selected_board [15:0][15:0],
+    output  logic[5:0]   selected_board_complete [15:0][15:0]
+);
+
+/**
+ * Local variables and signals
+ */
     logic [7:0] selection;
-    logic[5:0] selected_board_nxt [15:0][15:0];
-    logic[5:0] selected_board_complete_nxt [15:0][15:0];
+    logic [5:0] selected_board_nxt [15:0][15:0];
+    logic [5:0] selected_board_complete_nxt [15:0][15:0];
+
     assign selection = (board_size<<5) + (lvl<<2)+ seed;
 
-    always_ff @(posedge clk) begin
-        if(rst) begin
-            selected_board <= '{default:0}; 
-            selected_board_complete <= '{default:0}; 
-        end else begin
-            selected_board <= selected_board_nxt;
-            selected_board_complete <= selected_board_complete_nxt;
-        end
+/**
+ * Internal logic
+ */
+always_ff @(posedge clk) begin
+    if(rst) begin
+        selected_board <= '{default:0}; 
+        selected_board_complete <= '{default:0}; 
+    end else begin
+        selected_board <= selected_board_nxt;
+        selected_board_complete <= selected_board_complete_nxt;
     end
+end
 
-    always_comb begin
-        if(is_game_on) begin
-            selected_board_nxt = selected_board;
-            selected_board_complete_nxt = selected_board_complete;
-        end else begin
-            case (selection)
-                    8'b010_001_00: 
-                        begin
-                            selected_board_nxt ='{
+always_comb begin
+    if(is_game_on) begin
+        selected_board_nxt = selected_board;
+        selected_board_complete_nxt = selected_board_complete;
+    end else begin
+        case (selection)
+                8'b010_001_00: 
+                    begin
+                        selected_board_nxt ='{
             '{6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000},
             '{6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000},
             '{6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000, 6'b000000},

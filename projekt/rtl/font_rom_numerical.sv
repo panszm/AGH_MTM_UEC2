@@ -1,11 +1,20 @@
+/**
+ * Copyright (C) 2023  AGH University of Science and Technology
+ * MTM UEC2
+ * Author: Piotr Kaczmarczyk
+ * Updated by: Waldemar Świder
+ *
+ * Description:
+ * ROM of number characters.
+ */
 `timescale 1ns / 1ps
 // ROM with synchonous read (inferring Block RAM)
 // character ROM
 module font_rom_numerical
     (
         input  logic        clk,
-        input  logic [10:0] addr,            // {char_code[6:0], char_line[3:0]}
-        output logic  [15:0]  char_line_pixels // pixels of the character line
+        input  logic[10:0]  addr,            // {char_code[6:0], char_line[3:0]}
+        output logic[15:0]  char_line_pixels // pixels of the character line
     );
 
     // signal declaration

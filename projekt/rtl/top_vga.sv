@@ -39,29 +39,29 @@ wire [10:0] vcount_tim, hcount_tim;
 wire vsync_tim, hsync_tim;
 wire vblnk_tim, hblnk_tim;
 
-logic mouse_left, mouse_right, mouse_middle;
-logic [11:0] mouse_x_position, mouse_y_position, rect_x_position, rect_y_position;
-logic[2:0] board_size;
-logic[2:0] lvl;
-logic is_game_on;
-
-logic[15:0] char_pixels;
-logic [10:0] char_address;
-
-logic[15:0] char_pixels_2;
-logic [10:0] char_address_2;
-
-logic[15:0] char_pixels_3;
-logic [10:0] char_address_3;
-
-logic incorrect, victory;
-logic[1:0] seed;
+logic mouse_left, mouse_right;
+logic [11:0] mouse_x_position;
 
 logic [5:0] board [15:0][15:0];
 logic [5:0] selected_board [15:0][15:0];
 logic [5:0] selected_board_complete [15:0][15:0];
 logic [3:0] selection_x, selection_y;
+
+logic is_game_on;
+logic[2:0] board_size;
+logic[1:0] seed;
+logic[2:0] lvl;
+
+logic[15:0] char_pixels_board_size;
+logic [10:0] char_address_board_size;
+logic[15:0] char_pixels_board_numbers;
+logic [10:0] char_address_board_numbers;
+logic[15:0] char_pixels_lvl;
+logic [10:0] char_address_lvl;
+
+logic incorrect, victory;
 logic victory_rst;
+
 
 vga_bus bus_bg();
 
@@ -87,6 +87,16 @@ assign rst_comb = rst || victory_rst;
  * Submodules instances
  */
 
+MouseCtl mouse_ctl(
+    .clk,
+    .rst,
+    .left(mouse_left),
+    .right(mouse_right),
+    .xpos(mouse_x_position),
+    .ps2_clk(ps2_clk),
+    .ps2_data(ps2_data)
+);
+
 vga_timing u_vga_timing (
     .clk,
     .rst,
@@ -101,97 +111,92 @@ vga_timing u_vga_timing (
 draw_bg u_draw_bg (
     .clk,
     .rst,
-
     .vcount_in  (vcount_tim),
     .vsync_in   (vsync_tim),
     .vblnk_in   (vblnk_tim),
     .hcount_in  (hcount_tim),
     .hsync_in   (hsync_tim),
     .hblnk_in   (hblnk_tim),
-
     .bus_out    (bus_bg.OUT)
 );
 
-
-MouseCtl mouse_ctl(
-    .clk(clk),
-    .rst,
-    .left(mouse_left),
-    .right(mouse_right),
-    .middle(mouse_middle),
-    .xpos(mouse_x_position),
-    .ypos(mouse_y_position),
-    .ps2_clk(ps2_clk),
-    .ps2_data(ps2_data)
-);
-
-
-game_menu u_game_menu(
+game_menu_ctl u_game_menu_ctl(
     .clk,
     .rst(rst_comb),
+
     .top,
     .bottom,
     .left,
     .right,
     .mouse_left,
+
     .board_size,
     .lvl,
     .is_game_on
 );
 
-draw_menu u_draw_menu(
+game_menu_draw u_game_menu_draw(
     .clk,
     .rst(rst_comb),
+
     .is_game_on,
 
     .bus_in(bus_bg.IN),
     .bus_out(bus_menu.OUT)
 );
 
-draw_single_num u_draw_single_num_size(
+draw_single_number u_draw_single_number_size(
     .clk,
     .rst(rst_comb),
+
     .is_game_on,
     .number(board_size),
 
     .bus_in(bus_menu.IN),
     .bus_out(bus_num.OUT),
-    .char_pixels,
-    .address(char_address)
+
+    .char_pixels(char_pixels_board_size),
+    .address(char_address_board_size)
 );
 
 font_rom_numerical u_font_rom_numerical_size(
     .clk,
-    .addr(char_address),
-    .char_line_pixels(char_pixels)
+
+    .addr(char_address_board_size),
+    .char_line_pixels(char_pixels_board_size)
 );
 
 
-draw_single_num #(504, 392) u_draw_single_num_lvl (
+draw_single_number #(504, 392) u_draw_single_number_lvl (
     .clk,
     .rst(rst_comb),
+
     .is_game_on,
     .number(lvl),
 
     .bus_in(bus_num.IN),
     .bus_out(bus_board.OUT),
-    .char_pixels(char_pixels_3),
-    .address(char_address_3)
+
+    .char_pixels(char_pixels_lvl),
+    .address(char_address_lvl)
 );
 
 font_rom_numerical u_font_rom_numerical_lvl(
     .clk,
-    .addr(char_address_3),
-    .char_line_pixels(char_pixels_3)
+
+    .addr(char_address_lvl),
+    .char_line_pixels(char_pixels_lvl)
 );
 
 game_board_select u_game_board_select(
     .clk,
     .rst(rst_comb),
+
     .board_size,
-    .is_game_on,
     .lvl,
     .seed,
+    .is_game_on,
+
     .selected_board,
     .selected_board_complete
 );
@@ -199,16 +204,19 @@ game_board_select u_game_board_select(
 game_board_ctl u_game_board_ctl(
     .clk,
     .rst(rst_comb),
+
     .top,
     .bottom,
     .left,
     .right,
     .mouse_left,
     .mouse_right,
+
     .is_game_on,
     .board_size,
     .selected_board,
     .selected_board_complete,
+
     .board,
     .selection_x,
     .selection_y,
@@ -220,32 +228,38 @@ game_board_ctl u_game_board_ctl(
 game_board_draw u_game_board_draw(
     .clk,
     .rst(rst_comb),
+
     .is_game_on,
     .board_size,
-    .bus_in(bus_board.IN),
-    .bus_out(bus_board_numbers.OUT),
     .incorrect,
-    .victory
+    .victory,
+
+    .bus_in(bus_board.IN),
+    .bus_out(bus_board_numbers.OUT)
 );
 
 game_board_numbers_draw u_game_board_numbers_draw(
     .clk,
     .rst(rst_comb),
+
     .is_game_on,
     .board_size,
     .board,
-    .char_pixels(char_pixels_2),
+    .char_pixels(char_pixels_board_numbers),
+    .selection_x,
+    .selection_y,
+
     .bus_in(bus_board_numbers.IN),
     .bus_out(bus_out.OUT),
-    .address(char_address_2),
-    .selection_x,
-    .selection_y
+
+    .address(char_address_board_numbers)
 );
 
 font_rom_numerical u2_font_rom_numerical(
     .clk,
-    .addr(char_address_2),
-    .char_line_pixels(char_pixels_2)
+    
+    .addr(char_address_board_numbers),
+    .char_line_pixels(char_pixels_board_numbers)
 );
 
 endmodule
